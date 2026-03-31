@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliothèque des Ressources — R&R™</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ============================================================
+   RESET & VARIABLES
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:       #C9A84C;
+  --gold-dark:  #988038;
+  --gold-light: #E8C96A;
+  --black:      #000000;
+  --black-soft: #0D0D0D;
+  --black-card: #161616;
+  --black-mid:  #1E1E1E;
+  --red:        #7B1E1E;
+  --red-hover:  #9B2424;
+  --white:      #FFFFFF;
+  --cream:      #F5F0E8;
+  --text-muted: #888880;
+  --border:     rgba(201,168,76,0.2);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--black-soft);
+  color: var(--white);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   STICKY HEADER
+   ============================================================ */
+.rr-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--black);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  gap: 16px;
+}
+.rr-sticky-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+}
+.rr-sticky-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+}
+.rr-sticky-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(201,168,76,0.7);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.rr-hero {
+  background: var(--black);
+  padding: 56px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.rr-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.rr-hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.rr-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.rr-hero-title span { color: var(--gold); }
+.rr-hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 25px;
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 28px;
+}
+.rr-hero-intro {
+  max-width: 680px;
+  margin: 0 auto 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.8;
+}
+.rr-hero-intro strong { color: var(--gold); font-weight: 600; }
+.rr-hero-intro em { color: var(--white); font-style: normal; }
+
+/* Scroll arrows */
+.rr-scroll {
+  display: flex; flex-direction: column; align-items: center;
+  margin-top: 28px; gap: 6px; cursor: pointer;
+}
+.rr-scroll-txt {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 14px;
+  color: rgba(201,168,76,0.6);
+  letter-spacing: 1px;
+}
+.rr-scroll-arrows { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.rr-arrow-chevron {
+  width: 14px; height: 14px;
+  border-right: 1.5px solid rgba(201,168,76,0.5);
+  border-bottom: 1.5px solid rgba(201,168,76,0.5);
+  transform: rotate(45deg);
+  margin-top: -6px;
+  animation: chevronBounce 2s ease-in-out infinite;
+}
+.rr-arrow-chevron:nth-child(1) { animation-delay: 0s; opacity: 0.3; }
+.rr-arrow-chevron:nth-child(2) { animation-delay: 0.15s; opacity: 0.6; }
+.rr-arrow-chevron:nth-child(3) { animation-delay: 0.3s; opacity: 1; }
+@keyframes chevronBounce {
+  0%,100% { transform: rotate(45deg) translateY(0); }
+  50% { transform: rotate(45deg) translateY(4px); }
+}
+
+/* ============================================================
+   AVERTISSEMENT
+   ============================================================ */
+.rr-warning {
+  background: var(--black);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 24px;
+}
+.rr-warning-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.rr-warning-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rr-warning p {
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.85;
+  margin-bottom: 14px;
+}
+.rr-warning p:last-child { margin-bottom: 0; }
+.rr-warning strong { color: var(--white); font-weight: 700; }
+
+/* ============================================================
+   COMMENT UTILISER
+   ============================================================ */
+.rr-how {
+  background: var(--black-card);
+  padding: 40px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.rr-how-inner { max-width: 800px; margin: 0 auto; }
+.rr-how-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rr-how-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+.rr-how-step {
+  background: var(--black-mid);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 18px;
+  text-align: center;
+}
+.rr-how-step-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+}
+.rr-how-step-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+.rr-progress-section {
+  background: var(--black);
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.rr-progress-inner { max-width: 800px; margin: 0 auto; }
+.rr-progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.rr-progress-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+}
+.rr-progress-label span { color: var(--gold); font-weight: 700; }
+.rr-progress-badge {
+  font-size: 14px;
+  font-weight: 700;
+  color: #22c55e;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.rr-progress-badge.show { opacity: 1; }
+.rr-progress-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.rr-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.rr-order-note {
+  background: rgba(201,168,76,0.07);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 20px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+}
+.rr-order-note strong { color: var(--gold); }
+
+/* ============================================================
+   SECTION TITRE
+   ============================================================ */
+.rr-section-title-wrap {
+  background: var(--cream);
+  padding: 36px 24px 24px;
+  text-align: center;
+}
+.rr-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 600;
+  color: #2D2D2D;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  position: relative;
+  display: inline-block;
+}
+.rr-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; left: 50%;
+  transform: translateX(-50%);
+  width: 50px; height: 1.5px;
+  background: var(--gold);
+}
+
+/* ============================================================
+   GRILLE DES CARDS
+   ============================================================ */
+.rr-grid-wrap {
+  background: var(--cream);
+  padding: 44px 24px 64px;
+}
+.rr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.rr-card {
+  background: var(--white);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 2px;
+  padding: 28px 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardIn 0.6s ease forwards;
+  min-height: 320px;
+}
+.rr-card:nth-child(1) { animation-delay: 0ms; }
+.rr-card:nth-child(2) { animation-delay: 70ms; }
+.rr-card:nth-child(3) { animation-delay: 140ms; }
+.rr-card:nth-child(4) { animation-delay: 210ms; }
+.rr-card:nth-child(5) { animation-delay: 280ms; }
+.rr-card:nth-child(6) { animation-delay: 350ms; }
+.rr-card:nth-child(7) { animation-delay: 420ms; }
+.rr-card:nth-child(8) { animation-delay: 490ms; }
+@keyframes cardIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.rr-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+  border-color: var(--gold);
+}
+.rr-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 0;
+  background: linear-gradient(180deg, var(--gold), var(--red));
+  transition: height 0.4s ease;
+}
+.rr-card:hover::before { height: 100%; }
+.rr-card.done { border-color: rgba(34,197,94,0.3); }
+.rr-card.done::after {
+  content: '✓';
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 26px; height: 26px;
+  background: #166534;
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* CARD HEAD */
+.rr-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.rr-card-icon {
+  width: 42px; height: 42px;
+  border: 1px solid var(--gold);
+  background: rgba(201,168,76,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.rr-card-meta { text-align: right; }
+.rr-card-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: rgba(201,168,76,0.2);
+  line-height: 1;
+}
+.rr-card-time {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+/* BADGES */
+.rr-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.rr-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+}
+.rr-badge-type {
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: transparent;
+}
+.rr-badge-tag {
+  background: #1a1a1a;
+  color: var(--gold);
+}
+.rr-badge-start {
+  background: var(--red);
+  color: var(--white);
+  animation: pulseBadge 2s ease-in-out infinite;
+}
+@keyframes pulseBadge {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* TITRE CARD */
+.rr-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2D2D2D;
+  line-height: 1.35;
+  margin-bottom: 16px;
+  transition: color 0.3s;
+}
+.rr-card:hover .rr-card-title { color: var(--red); }
+
+/* CONTENU CACHÉ → visible au hover */
+.rr-card-reveal {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+  margin-bottom: 0;
+}
+.rr-card:hover .rr-card-reveal,
+.rr-card.touch-open .rr-card-reveal {
+  max-height: 400px;
+  opacity: 1;
+  margin-bottom: 16px;
+}
+.rr-card-pitch {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-style: italic;
+  color: #555;
+  line-height: 1.6;
+  border-left: 2px solid var(--gold);
+  padding-left: 14px;
+  margin-bottom: 16px;
+}
+.rr-card-benefits-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.rr-card-benefits ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rr-card-benefits li {
+  font-size: 15px;
+  color: #666;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+.rr-card-benefits li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+/* CTA BUTTON */
+.rr-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--white);
+  background: var(--red);
+  padding: 14px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: auto;
+  box-shadow: 0 6px 20px rgba(123,30,30,0.25);
+  text-decoration: none;
+}
+.rr-card:hover .rr-card-cta {
+  background: var(--red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(123,30,30,0.35);
+}
+.rr-card-cta i { font-size: 14px; transition: transform 0.3s; }
+.rr-card:hover .rr-card-cta i { transform: translateX(4px); }
+
+/* ============================================================
+   SECTION NOTE FINALE
+   ============================================================ */
+.rr-notes {
+  background: var(--black);
+  padding: 50px 24px;
+}
+.rr-notes-inner { max-width: 800px; margin: 0 auto; }
+.rr-notes-block {
+  margin-bottom: 40px;
+}
+.rr-notes-block:last-child { margin-bottom: 0; }
+.rr-notes-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rr-notes-block p {
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.85;
+  margin-bottom: 12px;
+}
+.rr-notes-block p:last-child { margin-bottom: 0; }
+.rr-notes-block strong { color: var(--white); font-weight: 700; }
+.rr-notes-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rr-notes-block li {
+  font-size: 17px;
+  color: rgba(255,255,255,0.7);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.6;
+}
+.rr-notes-block li::before {
+  content: '—';
+  position: absolute; left: 0;
+  color: var(--gold);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.rr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s ease;
+}
+.rr-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+.rr-modal {
+  width: 100%;
+  max-width: 900px;
+  height: 92vh;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(30px) scale(0.97);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  overflow: hidden;
+}
+.rr-modal-overlay.open .rr-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* MODAL HEADER */
+.rr-modal-hd {
+  background: var(--black);
+  border-bottom: 1px solid var(--gold);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.rr-modal-hd-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.rr-modal-hd-icon {
+  width: 36px; height: 36px;
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.rr-modal-hd-info { min-width: 0; }
+.rr-modal-hd-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 2px;
+}
+.rr-modal-hd-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
+}
+.rr-modal-hd-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.rr-modal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.rr-modal-btn-nav {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  padding: 8px 10px;
+}
+.rr-modal-btn-nav:hover { background: rgba(255,255,255,0.15); color: var(--white); }
+.rr-modal-btn-nav:disabled { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+.rr-modal-btn-dl {
+  background: var(--gold-dark);
+  color: var(--white);
+}
+.rr-modal-btn-dl:hover { background: var(--gold); }
+.rr-modal-btn-close {
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.rr-modal-btn-close:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+/* MODAL ENCOURAGEMENT */
+.rr-modal-enc {
+  background: rgba(201,168,76,0.08);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  padding: 10px 20px;
+  flex-shrink: 0;
+}
+.rr-modal-enc p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: #3D3D3D;
+  text-align: center;
+}
+
+/* MODAL IFRAME */
+.rr-modal-body {
+  flex: 1;
+  overflow: hidden;
+  background: var(--white);
+}
+.rr-modal-body iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* MODAL FOOTER */
+.rr-modal-ft {
+  background: var(--black);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.rr-modal-ft-txt {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+}
+.rr-modal-ft-txt span { color: var(--gold); }
+.rr-modal-btn-next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.rr-modal-btn-next:hover {
+  background: var(--red-hover);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.rr-footer {
+  background: var(--black);
+  padding: 32px 24px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.rr-footer-line {
+  width: 80px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 16px;
+}
+.rr-footer p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .rr-hero { padding: 40px 16px 36px; }
+  .rr-hero-intro { font-size: 16px; }
+  .rr-warning, .rr-how, .rr-notes { padding: 32px 16px; }
+  .rr-warning p, .rr-notes-block p, .rr-notes-block li { font-size: 15px; }
+  .rr-how-steps { grid-template-columns: repeat(2, 1fr); }
+  .rr-grid-wrap { padding: 32px 16px 48px; }
+  .rr-grid { grid-template-columns: 1fr; gap: 18px; }
+  .rr-card { min-height: auto; }
+  .rr-card-reveal {
+    max-height: none;
+    opacity: 1;
+    margin-bottom: 16px;
+  }
+  .rr-card-title { font-size: 18px; }
+  .rr-modal { height: 100vh; }
+  .rr-modal-overlay { padding: 0; }
+  .rr-modal-hd { flex-wrap: wrap; gap: 8px; }
+  .rr-modal-hd-actions { width: 100%; justify-content: flex-end; }
+  .rr-modal-hd-title { max-width: 220px; font-size: 13px; }
+  .rr-modal-ft { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+.rr-title-ico {
+  color: var(--gold);
+  margin-right: 8px;
+  font-size: 0.9em;
+}
+.rr-how-step-icon i {
+  font-size: 26px;
+  color: var(--gold);
+}
+.rr-notes-title i {
+  color: var(--gold);
+  margin-right: 8px;
+}
+.rr-warning-title i {
+  color: var(--gold);
+  margin-right: 8px;
+}
+.rr-how-title i {
+  color: var(--gold);
+  margin-right: 8px;
+}
+
+.rr-quiz-wrap{display:none;flex-direction:column;height:100%;background:#FAF8F5;overflow-y:auto}
+.rr-quiz-wrap.active{display:flex}
+.rr-quiz-pbar{height:5px;background:rgba(0,0,0,0.08);flex-shrink:0}
+.rr-quiz-pfill{height:100%;background:linear-gradient(90deg,#988038,#C9A84C);transition:width .4s ease}
+.rr-quiz-screen{display:none;flex-direction:column;flex:1;padding:36px 44px}
+.rr-quiz-screen.active{display:flex}
+.rr-q-num{font-size:11px;font-weight:700;color:#C9A84C;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px}
+.rr-q-text{font-size:22px;font-weight:700;color:#1a1a1a;line-height:1.4;margin-bottom:28px}
+.rr-q-opts{display:flex;flex-direction:column;gap:10px}
+.rr-q-opt{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1.5px solid rgba(0,0,0,0.1);border-radius:6px;cursor:pointer;transition:all .2s;background:white}
+.rr-q-opt:hover{border-color:#C9A84C;background:rgba(201,168,76,0.04)}
+.rr-q-opt.sel{border-color:#C9A84C;background:rgba(201,168,76,0.08)}
+.rr-q-letter{width:30px;height:30px;border-radius:50%;border:1.5px solid #C9A84C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#C9A84C;flex-shrink:0;transition:all .2s}
+.rr-q-opt.sel .rr-q-letter{background:#C9A84C;color:white}
+.rr-q-opttext{font-size:17px;font-weight:500;color:#333;line-height:1.45;padding-top:3px}
+.rr-quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+.rr-qbtn{padding:14px 26px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:none;border-radius:4px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif}
+.rr-qbtn-prev{background:rgba(0,0,0,0.06);color:#666}
+.rr-qbtn-prev:hover{background:rgba(0,0,0,0.1)}
+.rr-qbtn-next{background:#7B1E1E;color:white;box-shadow:0 4px 16px rgba(123,30,30,.25)}
+.rr-qbtn-next:hover{background:#9B2424;transform:translateY(-1px)}
+.rr-qbtn-next:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.rr-quiz-result{display:none;flex-direction:column;align-items:center;flex:1;padding:40px 44px;text-align:center}
+.rr-quiz-result.active{display:flex}
+.rr-res-eye{font-size:11px;font-weight:700;color:#C9A84C;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.rr-res-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:#1a1a1a;margin-bottom:6px;line-height:1.2}
+.rr-res-sub{font-size:15px;color:#888;margin-bottom:28px}
+.rr-res-box{background:white;border:1.5px solid rgba(201,168,76,.3);border-left:4px solid #C9A84C;border-radius:6px;padding:28px 32px;text-align:left;margin-bottom:24px;width:100%;max-width:680px}
+.rr-res-veh{font-size:12px;font-weight:700;color:#7B1E1E;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.rr-res-veh-txt{font-size:15px;color:#666;font-style:italic;margin-bottom:16px}
+.rr-res-buls{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.rr-res-buls li{font-size:17px;color:#333;padding-left:18px;position:relative;line-height:1.5}
+.rr-res-buls li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;background:#C9A84C;border-radius:50%}
+.rr-res-enjeu{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
+.rr-res-challenge{font-size:15px;color:#555;line-height:1.8}
+.rr-res-cta{display:inline-flex;align-items:center;gap:8px;background:#7B1E1E;color:white;padding:16px 32px;border:none;border-radius:4px;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .3s;box-shadow:0 6px 20px rgba(123,30,30,.3);margin-top:6px;font-family:'Poppins',sans-serif}
+.rr-res-cta:hover{background:#9B2424;transform:translateY(-2px)}
+.rr-quiz-restart{margin-top:14px;background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;text-decoration:underline;font-family:'Poppins',sans-serif}
+@media(max-width:768px){
+  .rr-quiz-screen,.rr-quiz-result{padding:22px 16px}
+  .rr-q-text{font-size:18px}
+  .rr-q-opttext{font-size:15px}
+  .rr-res-title{font-size:24px}
+  .rr-res-box{padding:18px 16px}
+}
+
+/* FORMULAIRE QUIZ */
+.rr-quiz-form-screen { gap: 0; }
+.rr-form-fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+.rr-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rr-form-group { display: flex; flex-direction: column; gap: 6px; }
+.rr-form-label { font-size: 13px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+.rr-form-input {
+  padding: 14px 16px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #1a1a1a;
+  background: white;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color .2s;
+  width: 100%;
+}
+.rr-form-input:focus { border-color: #C9A84C; }
+.rr-form-input::placeholder { color: #bbb; }
+.rr-quiz-hint {
+  font-size: 13px;
+  color: #aaa;
+  font-style: italic;
+  font-family: 'Poppins', sans-serif;
+}
+@media (max-width: 500px) {
+  .rr-form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     STICKY HEADER
+     ============================================================ -->
+<div class="rr-sticky">
+  <img src="https://assets.cdn.filesafe.space/oMBIPw3Z81uVfSzM52rT/media/69b7b565ad027640b916da1a.png" alt="Logo R&R" class="rr-sticky-logo">
+  <div class="rr-sticky-sep"></div>
+  <span class="rr-sticky-label">R&amp;R™ — Reconnu &amp; Rémunéré</span>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="rr-hero">
+  <h1 class="rr-hero-title">Bibliothèque des <span>Ressources</span></h1>
+  <p class="rr-hero-sub">Travaillez dans l'ordre. Puis venez au LIVE.</p>
+  <p class="rr-hero-intro">
+    Ces documents ne sont pas du &ldquo;contenu&rdquo;. <strong>C'est une séquence.</strong><br>
+    Et chaque Ressource <em>prépare la transformation suivante</em>.
+  </p>
+  <div class="rr-scroll" onclick="document.querySelector('.rr-warning').scrollIntoView({behavior:'smooth'})">
+    <span class="rr-scroll-txt" style="font-size:25px;font-weight:700;letter-spacing:2px;color:rgba(201,168,76,0.9);">Découvrir les ressources</span>
+    <div class="rr-scroll-arrows">
+      <div class="rr-arrow-chevron"></div>
+      <div class="rr-arrow-chevron"></div>
+      <div class="rr-arrow-chevron"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     AVERTISSEMENT
+     ============================================================ -->
+<section class="rr-warning">
+  <div class="rr-warning-inner">
+    <h2 class="rr-warning-title"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANT : À LIRE AVANT LES LIVES</h2>
+    <p>Si vous arrivez aux LIVE sans avoir lu les ressources, vous comprendrez… <strong>mais vous ne transformerez pas votre situation.</strong></p>
+    <p>Les LIVE ne sont pas faits pour vous convaincre. Ils sont faits pour <strong>accélérer ce que vous avez déjà intégré.</strong> Ces documents ne sont pas du "contenu". C'est une séquence.</p>
+    <p>Et chaque Ressource <strong>prépare la transformation suivante.</strong></p>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMMENT UTILISER
+     ============================================================ -->
+<section class="rr-how">
+  <div class="rr-how-inner">
+    <h2 class="rr-how-title"><i class="fa-solid fa-brain"></i> COMMENT UTILISER LES RESSOURCES</h2>
+    <div class="rr-how-steps">
+      <div class="rr-how-step">
+        <span class="rr-how-step-icon"><i class="fa-regular fa-clock"></i></span>
+        <p class="rr-how-step-text">30 minutes par PDF</p>
+      </div>
+      <div class="rr-how-step">
+        <span class="rr-how-step-icon"><i class="fa-solid fa-book"></i></span>
+        <p class="rr-how-step-text">Avec un carnet</p>
+      </div>
+      <div class="rr-how-step">
+        <span class="rr-how-step-icon"><i class="fa-solid fa-pen-to-square"></i></span>
+        <p class="rr-how-step-text">En répondant aux questions</p>
+      </div>
+      <div class="rr-how-step">
+        <span class="rr-how-step-icon"><i class="fa-solid fa-bullseye"></i></span>
+        <p class="rr-how-step-text">Sans multitâche</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROGRESS
+     ============================================================ -->
+<section class="rr-progress-section">
+  <div class="rr-progress-inner">
+    <div class="rr-progress-top">
+      <p class="rr-progress-label">Vous avez exploré <span id="progCount">0</span>/8 ressources</p>
+      <p class="rr-progress-badge" id="progBadge">Arsenal Complet <i class="fa-solid fa-trophy"></i></p>
+    </div>
+    <div class="rr-progress-bar">
+      <div class="rr-progress-fill" id="progFill"></div>
+    </div>
+    <div class="rr-order-note">
+      Pour un maximum d'impact, <strong>suivez l'ordre</strong>. Commencez par le diagnostic →
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION TITRE
+     ============================================================ -->
+<div class="rr-section-title-wrap">
+  <h2 class="rr-section-title">Vos 8 Ressources Stratégiques</h2>
+</div>
+
+<!-- ============================================================
+     GRILLE DES CARDS
+     ============================================================ -->
+<section class="rr-grid-wrap">
+  <div class="rr-grid">
+
+    <!-- CARD 1 — QUIZ -->
+    <div class="rr-card" data-idx="0" onclick="openModal(0)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-compass"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">01</div>
+          <div class="rr-card-time">⏱ 5 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">Quiz</span>
+        <span class="rr-badge rr-badge-tag">Le Diagnostic de Départ</span>
+        <span class="rr-badge rr-badge-start">Commencez ici</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-compass rr-title-ico"></i>Clarté, Positionnement &amp; Reconnaissance — Où en êtes-vous vraiment aujourd'hui ?</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">Ce diagnostic permet d'identifier pourquoi votre valeur réelle ne se reflète pas encore dans votre reconnaissance, vos clients ou vos revenus — et ce qu'il faut changer en priorité. Il n'y a pas de bonne réponse — seulement un niveau de clarté.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Transformation attendue :</p>
+          <ul>
+            <li>Identifier ce qui bloque votre reconnaissance</li>
+            <li>Prioriser les actions à fort impact</li>
+            <li>Diagnostiquer votre realité</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">LANCER MON DIAGNOSTIC <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 2 — PDF 1 -->
+    <div class="rr-card" data-idx="1" onclick="openModal(1)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-eye-slash"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">02</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 1</span>
+        <span class="rr-badge rr-badge-tag">Non-catégorisé</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>Vous n'êtes pas invisible. Vous êtes non-catégorisé.</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">"Si quelqu'un devait m'appeler pour UNE situation précise… laquelle ?" Si cette réponse est floue, vous n'êtes pas invisible. Vous êtes non-catégorisé.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez comprendre :</p>
+          <ul>
+            <li>Pourquoi visibilité ≠ lisibilité</li>
+            <li>Pourquoi "intéressant" est une catégorie dangereuse</li>
+            <li>Pourquoi le marché choisit la clarté, pas la qualité</li>
+            <li>Pourquoi votre problème n'est probablement pas marketing</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">SORTIR DE L'INVISIBILITÉ <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 3 — PDF 2 -->
+    <div class="rr-card" data-idx="2" onclick="openModal(2)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">03</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 2</span>
+        <span class="rr-badge rr-badge-tag">Le Mythe</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>Le mythe du marketing</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">"Ce n'est pas moi le problème." Moment de lucidité : l'ordre Structure → Stratégie change tout.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez réaliser pourquoi :</p>
+          <ul>
+            <li>Améliorer votre message peut renforcer votre dilution</li>
+            <li>Plus d'effort peut amplifier la confusion</li>
+            <li>Polir un miroir qui ne reflète rien ne sert à rien</li>
+            <li>L'ordre Structure → Stratégie change tout</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">SORTIR DU MARKETING CREUX <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 4 — PDF 3 -->
+    <div class="rr-card" data-idx="3" onclick="openModal(3)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-star"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">04</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 3</span>
+        <span class="rr-badge rr-badge-tag">Les Références</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>Pourquoi certains deviennent des références</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">"Arrêter de vouloir prouver. Chercher à se structurer." — Comment naît une évidence sur un marché.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez comprendre :</p>
+          <ul>
+            <li>Comment le marché installe des figures, pas des compétences</li>
+            <li>Pourquoi le talent ne suffit pas</li>
+            <li>Comment naît une évidence</li>
+            <li>Pourquoi certains sont consultés… et d'autres choisis</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">JE DEVIENS LA RÉFÉRENCE <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 5 — PDF 4 -->
+    <div class="rr-card" data-idx="4" onclick="openModal(4)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">05</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 4</span>
+        <span class="rr-badge rr-badge-tag">La Structure</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>"La Structure Avant la Stratégie" — Le Framework R&amp;R™</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">Identité → Structure → Visibilité → Système → Stabilité. "Je comprends la logique de la Roadmap R&R™." — La roadmap complète.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez voir :</p>
+          <ul>
+            <li>Pourquoi commencer par la visibilité est une erreur</li>
+            <li>Pourquoi la reconnaissance est une conséquence</li>
+            <li>Ce qui se passe quand un pilier manque</li>
+            <li>La roadmap complète</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">JE CHOISIS DE STRUCTURER <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 6 — PDF 5 -->
+    <div class="rr-card" data-idx="5" onclick="openModal(5)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-calculator"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">06</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 5</span>
+        <span class="rr-badge rr-badge-tag">Le Prix Caché</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>Le Prix Caché de l'Interchangeabilité</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">Quel est le montant chiffré de votre interchangeabilité ? Il y a un calculateur simple. Répondez honnêtement à cette question.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez comprendre :</p>
+          <ul>
+            <li><i class="fa-solid fa-hand-point-right" style="color:var(--gold);margin-right:6px"></i>Temps perdu.</li>
+            <li><i class="fa-solid fa-hand-point-right" style="color:var(--gold);margin-right:6px"></i>Opportunités manquées.</li>
+            <li><i class="fa-solid fa-hand-point-right" style="color:var(--gold);margin-right:6px"></i>Négociations répétées.</li>
+            <li><i class="fa-solid fa-hand-point-right" style="color:var(--gold);margin-right:6px"></i>Charge mentale.</li>
+            <li><i class="fa-solid fa-hand-point-right" style="color:var(--gold);margin-right:6px"></i>Réputation figée.</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">JE CALCULE LE COÛT EN CASH <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 7 — PDF 6 -->
+    <div class="rr-card" data-idx="6" onclick="openModal(6)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-person"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">07</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 6</span>
+        <span class="rr-badge rr-badge-tag">Personnalité</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>Ce n'est pas une question de personnalité</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">"Vous n'avez jamais vrament appris a structurer votre valeur ." — Pourquoi des profils introvertis deviennent des références.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez comprendre :</p>
+          <ul>
+            <li>Pourquoi ce n'est ni le charisme ni l'extraversion</li>
+            <li>Pourquoi des profils introvertis deviennent des références</li>
+            <li>Pourquoi vous n'avez rien à changer… mais TOUT à organiser</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">JE RÉUSSIS SANS ME TRAVESTIR <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- CARD 8 — PDF 7 -->
+    <div class="rr-card" data-idx="7" onclick="openModal(7)">
+      <div class="rr-card-head">
+        <div class="rr-card-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="rr-card-meta">
+          <div class="rr-card-num">08</div>
+          <div class="rr-card-time">⏱ 30 min</div>
+        </div>
+      </div>
+      <div class="rr-card-badges">
+        <span class="rr-badge rr-badge-type">PDF 7</span>
+        <span class="rr-badge rr-badge-tag">Trajectoire</span>
+      </div>
+      <h3 class="rr-card-title"><i class="fa-solid fa-book-open rr-title-ico"></i>Dans 12 mois, dans quelle catégorie voulez-vous être classé ?</h3>
+      <div class="rr-card-reveal">
+        <p class="rr-card-pitch">Rester dans la catégorie actuelle… ou structurer ? À la fin, répondez honnêtement à cette question.</p>
+        <div class="rr-card-benefits">
+          <p class="rr-card-benefits-title">Vous allez comprendre :</p>
+          <ul>
+            <li>L'érosion lente de votre crédibilité</li>
+            <li>Le classement silencieux du marché</li>
+            <li>La différence avec l'étude de cas "Deux trajectoires comparées"</li>
+          </ul>
+        </div>
+      </div>
+      <button class="rr-card-cta">JE DEVIENS RECONNU ET RÉMUNÉRÉ <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     NOTES FINALES
+     ============================================================ -->
+<section class="rr-notes">
+  <div class="rr-notes-inner">
+
+    <div class="rr-notes-block">
+      <h3 class="rr-notes-title"><i class="fa-solid fa-gear"></i> Pourquoi lire AVANT le LIVE</h3>
+      <p>Les LIVE ne servent pas à vous introduire au problème. Ils servent à :</p>
+      <ul>
+        <li>Clarifier les blocages restants</li>
+        <li>Installer les premières briques</li>
+        <li>Répondre aux cas spécifiques</li>
+        <li>Présenter l'architecture complète</li>
+      </ul>
+      <br>
+      <p>Si vous arrivez sans avoir déplacé votre lecture, vous écouterez avec votre ancien filtre. <strong>Si vous arrivez réaligné, vous entendrez différemment.</strong></p>
+    </div>
+
+    <div class="rr-notes-block">
+      <h3 class="rr-notes-title"><i class="fa-solid fa-lock"></i> Une précision importante</h3>
+      <p>Ces ressources ne sont pas là pour vous motiver. Elles sont là pour vous rendre lucide. Et la lucidité crée une tension saine et structurelle. <strong>Ne la fuyez pas.</strong></p>
+      <p>Travaillez studieusement sur chaque ressource et <strong>dans l'ordre</strong>. Puis venez au LIVE pour vivre pleinement votre <strong>TRANSFORMATION</strong>.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="rr-footer">
+  <div class="rr-footer-line"></div>
+  <p>© 2026 R&R™ — Reconnu &amp; Rémunéré · Tous droits réservés</p>
+</footer>
+
+<!-- ============================================================
+     MODAL
+     ============================================================ -->
+<div class="rr-modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="rr-modal" onclick="event.stopPropagation()">
+
+    <div class="rr-modal-hd">
+      <div class="rr-modal-hd-left">
+        <div class="rr-modal-hd-icon"><i id="modalIcon" class="fa-solid fa-file"></i></div>
+        <div class="rr-modal-hd-info">
+          <span class="rr-modal-hd-sub" id="modalSub">PDF</span>
+          <div class="rr-modal-hd-title" id="modalTitle">Titre</div>
+        </div>
+      </div>
+      <div class="rr-modal-hd-actions">
+        <button class="rr-modal-btn rr-modal-btn-nav" id="btnPrev" onclick="navigateModal(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="rr-modal-btn rr-modal-btn-nav" id="btnNext" onclick="navigateModal(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        <a href="#" id="btnDl" class="rr-modal-btn rr-modal-btn-dl" target="_blank" style="display:none"><i class="fa-solid fa-download"></i> Télécharger</a>
+        <button class="rr-modal-btn rr-modal-btn-close" onclick="closeModal(null,true)"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div class="rr-modal-enc">
+      <p id="modalEnc">Lisez avec intention. Chaque ligne compte.</p>
+    </div>
+
+    <div class="rr-modal-body">
+      <iframe id="modalIframe" src="" title="Ressource"></iframe>
+      <div class="rr-quiz-wrap" id="quizWrap"></div>
+    </div>
+
+    <div class="rr-modal-ft" id="modalFt">
+      <p class="rr-modal-ft-txt">Prochaine ressource : <span id="modalNext">—</span></p>
+      <button class="rr-modal-btn-next" onclick="navigateModal(1)">Ressource suivante <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+
+
+
+<script>
+var QUIZ_QUESTIONS = [
+  { q: "Quand tu aides quelqu'un, tu as le sentiment que :", opts: ["On te remercie, mais sans te considérer comme une référence","On te consulte pour \"avoir ton avis\", rarement pour décider","On reconnaît ton expertise, mais pas à sa juste valeur financière","Ton impact est clair, mais mal compris ou mal formulé","Ton travail est respecté et reconnu (rare)"] },
+  { q: "Quelle phrase te ressemble le plus ?", opts: ["Je déteste me mettre en avant.","Je sais vendre… mais pas aux bonnes personnes.","Je veux gagner de l'argent sans me travestir.","Je n'ai pas encore trouvé une structure de vente claire.","Je ne sais pas comment expliquer simplement ma valeur."] },
+  { q: "Aujourd'hui, tes clients/prospects sont surtout :", opts: ["Reconnaissants mais peu engageants","Négociateurs, flous ou mal alignés","Inconstants : parfois bons, parfois inexistants","Trop variés, sans logique claire","Perdus face à ton message"] },
+  { q: "Tes revenus sont aujourd'hui :", opts: ["Irréguliers et imprévisibles","Acceptables mais instables","Corrects mais épuisants à maintenir","En décalage avec ton impact réel","Sereins et alignés"] },
+  { q: "Si un inconnu te demandait ce que tu fais, tu pourrais :", opts: ["L'expliquer… mais en plusieurs minutes","Donner une réponse qui change selon la personne","Dire ce que tu fais, mais pas vraiment pourquoi c'est important","En parler mais c'est inconfortable quand il s'agit de parler d'argent","Donner une réponse claire, simple et mémorable"] },
+  { q: "Quand tu regardes ton investissement personnel :", opts: ["Tu donnes beaucoup pour peu de reconnaissance","Tu travailles dur pour des résultats incohérents","Tu fournis beaucoup d'efforts émotionnels","Tu avances sans vision globale","Tu ajustes sans cesse ton discours"] },
+  { q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Une solitude décisionnelle","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
+  { q: "La phrase qui te ressemble le plus :", opts: ["Je suis utile, mais invisible.","Je fais bien les choses, mais ce n'est pas reconnu.","Ce n'est pas normal que ce soit aussi compliqué.","Je sais que ça pourrait marcher mieux… mais je ne vois pas comment.","Je suis globalement aligné."] },
+  { q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De te caricaturer pour être compris"] },
+  { q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
+];
+
+var QUIZ_W = [
+  [3,2,1],[2,2,2],[2,3,2],[1,3,2],[3,1,1],[2,2,3],[1,2,3],[3,2,2],[2,3,2],[3,2,3]
+];
+
+var QUIZ_RES = {
+  A: {
+    label: "L'Expert Invisible à Forte Valeur",
+    sub: "Valeur forte, reconnaissance faible",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Travailler plus dur pour être enfin remarqué.\"",
+    bullets: ["Tu aides réellement.","Ton impact est là.","Mais tu n'es pas identifié comme une référence."],
+    enjeu: "Ton enjeu clé : rendre ta valeur visible sans te renier.",
+    challenge: "Tu as passé des années à accumuler de la valeur, mais tu essaies de la vendre dans un marché qui ne voit que des commodités. Ton problème n'est pas ton talent, c'est ton emballage. Tu n'as pas besoin de plus de diplômes, tu as besoin d'une Stature Assumée. Nous n'allons pas \"améliorer\" ton marketing, nous allons changer la catégorie dans laquelle tu joues pour que tu deviennes l'unique option.",
+    cta: "Le Challenge R&R™ est pertinent pour toi"
+  },
+  B: {
+    label: "L'Indépendant Éthique Bloqué Financièrement",
+    sub: "Aligné intérieurement, bloqué extérieurement",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Vendre son temps en espérant que les gens comprennent la valeur.\"",
+    bullets: ["Tu refuses les manipulations.","Tu veux de la cohérence.","Mais tes revenus ne suivent pas ton impact."],
+    enjeu: "Ton enjeu clé : réconcilier utilité et argent.",
+    challenge: "Tu as peur de vendre parce que tu confonds \"vendre\" et \"manipuler\". Aujourd'hui, tu vends ton temps, ce qui te force à négocier des miettes. La nouvelle opportunité, c'est de passer d'un vendeur de services à un Libérateur de Résultats. En structurant ta valeur dans un véhicule qui garantit une transformation, l'argent ne devient plus une question de \"prix\", mais un investissement logique. Tu peux rester éthique et devenir reconnu.",
+    cta: "Le Challenge R&R™ est un vrai point de bascule pour toi"
+  },
+  C: {
+    label: "Le Leader Solitaire",
+    sub: "Responsabilité élevée. Structure insuffisamment stabilisée.",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Porter toute la structure sur ses propres épaules.\"",
+    bullets: ["Tu es bloqué par l'isolement stratégique.","Tu manques d'un miroir stratégique fiable.","Tu veux un regard extérieur fiable et exigeant."],
+    enjeu: "Ton enjeu clé : créer une architecture stratégique qui ne dépend plus uniquement de ta capacité personnelle à tenir la pression.",
+    challenge: "Tu as réussi, mais à quel prix ? Tu es le goulot d'étranglement de ta propre réussite. Ton ancien véhicule (la force brute) a atteint sa limite de vitesse. La nouvelle opportunité n'est pas de travailler plus, mais de construire une Architecture qui travaille pour toi. Tu vas passer de \"l'homme-orchestre\" au \"chef d'orchestre\". On ne va pas optimiser ton agenda, on va bâtir un écosystème où ta stature génère de l'impact sans drainer ton énergie.",
+    cta: "Le Challenge R&R™ est fait pour toi"
+  }
+};
+
+var RESOURCES = [
+  { title:"Diagnostic de Départ", sub:"Quiz · Clarté, Positionnement & Reconnaissance", icon:"fa-compass", url:"", enc:"Répondez honnêtement, il n'y a pas de mauvaise réponse.", dl:false, isQuiz:true },
+  { title:"Vous n'êtes pas invisible. Vous êtes non-catégorisé.", sub:"PDF 1", icon:"fa-eye-slash", url:"PLACEHOLDER_PDF1", enc:"Prenez 30 minutes, lisez avec intention.", dl:true, isQuiz:false },
+  { title:"Le mythe du marketing", sub:"PDF 2", icon:"fa-triangle-exclamation", url:"PLACEHOLDER_PDF2", enc:"Ce guide va remettre en question tout ce qu'on vous a appris.", dl:true, isQuiz:false },
+  { title:"Pourquoi certains deviennent des références", sub:"PDF 3", icon:"fa-star", url:"PLACEHOLDER_PDF3", enc:"Lisez ceci pour comprendre la mécanique invisible du marché.", dl:true, isQuiz:false },
+  { title:"La Structure Avant la Stratégie — Framework R&R™", sub:"PDF 4", icon:"fa-layer-group", url:"PLACEHOLDER_PDF4", enc:"Gardez ce document près de vous pendant toute la semaine.", dl:true, isQuiz:false },
+  { title:"Le Prix Caché de l'Interchangeabilité", sub:"PDF 5", icon:"fa-calculator", url:"PLACEHOLDER_PDF5", enc:"Préparez une calculatrice. Les chiffres vont vous parler.", dl:true, isQuiz:false },
+  { title:"Ce n'est pas une question de personnalité", sub:"PDF 6", icon:"fa-person", url:"PLACEHOLDER_PDF6", enc:"Ce guide peut remuer. Lisez-le dans un endroit calme.", dl:true, isQuiz:false },
+  { title:"Dans 18 mois, dans quelle catégorie voulez-vous être classé ?", sub:"PDF 7", icon:"fa-clock-rotate-left", url:"PLACEHOLDER_PDF7", enc:"Dernière ressource. Posez-vous la question honnêtement.", dl:true, isQuiz:false }
+];
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+var currentIdx = 0;
+var completed = [];
+try { completed = JSON.parse(localStorage.getItem('rrb_progress') || '[]'); } catch(e) { completed = []; }
+
+function updateProgress() {
+  var c = completed.length;
+  document.getElementById('progCount').textContent = c;
+  document.getElementById('progFill').style.width = (c / 8 * 100) + '%';
+  if (c === 8) document.getElementById('progBadge').classList.add('show');
+  document.querySelectorAll('.rr-card').forEach(function(el, i) {
+    el.classList.toggle('done', completed.indexOf(i) !== -1);
+  });
+}
+
+function markDone(idx) {
+  if (completed.indexOf(idx) === -1) {
+    completed.push(idx);
+    try { localStorage.setItem('rrb_progress', JSON.stringify(completed)); } catch(e) {}
+    updateProgress();
+  }
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(idx) {
+  currentIdx = idx;
+  var r = RESOURCES[idx];
+  document.getElementById('modalTitle').textContent = r.title;
+  document.getElementById('modalSub').textContent = r.sub;
+  document.getElementById('modalIcon').className = 'fa-solid ' + r.icon;
+  document.getElementById('modalEnc').textContent = r.enc;
+
+  var iframe = document.getElementById('modalIframe');
+  var qwrap = document.getElementById('quizWrap');
+  var dl = document.getElementById('btnDl');
+
+  if (r.isQuiz) {
+    iframe.style.display = 'none';
+    qwrap.classList.add('active');
+    dl.style.display = 'none';
+    initQuiz();
+  } else {
+    iframe.style.display = 'block';
+    qwrap.classList.remove('active');
+    iframe.src = r.url;
+    if (r.dl) { dl.href = r.url; dl.style.display = 'flex'; }
+    else { dl.style.display = 'none'; }
+  }
+
+  document.getElementById('btnPrev').disabled = idx === 0;
+  document.getElementById('btnNext').disabled = idx === 7;
+
+  var ft = document.getElementById('modalFt');
+  if (idx < 7) {
+    document.getElementById('modalNext').textContent = RESOURCES[idx + 1].title;
+    ft.style.display = 'flex';
+  } else {
+    ft.style.display = 'none';
+  }
+
+  markDone(idx);
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e, force) {
+  if (force || (e && e.target === document.getElementById('modalOverlay'))) {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function() {
+      document.getElementById('modalIframe').src = '';
+      document.getElementById('quizWrap').classList.remove('active');
+    }, 350);
+  }
+}
+
+function navigateModal(dir) {
+  var ni = currentIdx + dir;
+  if (ni >= 0 && ni <= 7) {
+    var iframe = document.getElementById('modalIframe');
+    iframe.style.opacity = '0';
+    setTimeout(function() { openModal(ni); iframe.style.opacity = '1'; }, 180);
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('modalOverlay').classList.contains('open')) return;
+  if (e.key === 'Escape') closeModal(null, true);
+  if (e.key === 'ArrowLeft') navigateModal(-1);
+  if (e.key === 'ArrowRight') navigateModal(1);
+});
+
+document.querySelectorAll('.rr-card').forEach(function(card) {
+  card.addEventListener('touchstart', function() {
+    document.querySelectorAll('.rr-card').forEach(function(c) { c.classList.remove('touch-open'); });
+    card.classList.toggle('touch-open');
+  }, { passive: true });
+});
+
+document.getElementById('modalIframe').style.transition = 'opacity 0.2s ease';
+updateProgress();
+
+/* ============================================================
+   QUIZ ENGINE
+   ============================================================ */
+var qAnswers = {};
+var qStep = 0;      // -1 = formulaire, 0-9 = questions, 10 = résultat
+var qUserData = {}; // { nom, prenom, tel }
+
+function initQuiz() {
+  qAnswers = {};
+  qStep = -1; // on commence par le formulaire
+  renderQuiz();
+}
+
+function renderQuiz() {
+  var wrap = document.getElementById('quizWrap');
+  var total = QUIZ_QUESTIONS.length;
+  var pct = qStep < 0 ? 0 : Math.min(100, (qStep / total) * 100);
+  var letters = ['A','B','C','D','E'];
+
+  var html = '<div class="rr-quiz-pbar"><div class="rr-quiz-pfill" style="width:' + pct + '%"></div></div>';
+
+  /* ---- ÉTAPE 0 : FORMULAIRE ---- */
+  if (qStep === -1) {
+    var n = qUserData.nom || '';
+    var p = qUserData.prenom || '';
+    var t = qUserData.tel || '';
+    html += '<div class="rr-quiz-screen active rr-quiz-form-screen">';
+    html += '<p class="rr-q-num">AVANT DE COMMENCER</p>';
+    html += '<p class="rr-q-text">Quelques informations pour personnaliser ton résultat</p>';
+    html += '<div class="rr-form-fields">';
+    html += '<div class="rr-form-row">';
+    html += '<div class="rr-form-group"><label class="rr-form-label">Prénom</label><input id="qPrenom" class="rr-form-input" type="text" placeholder="Ton prénom" value="' + p + '"></div>';
+    html += '<div class="rr-form-group"><label class="rr-form-label">Nom</label><input id="qNom" class="rr-form-input" type="text" placeholder="Ton nom" value="' + n + '"></div>';
+    html += '</div>';
+    html += '<div class="rr-form-group"><label class="rr-form-label">Numéro de téléphone</label><input id="qTel" class="rr-form-input" type="tel" placeholder="+33 6 00 00 00 00" value="' + t + '"></div>';
+    html += '<div class="rr-form-group"><label class="rr-form-label">Email</label><input id="qTel" class="rr-form-input" type="tel" placeholder="contact@gmail.com" value="' + t + '"></div>';
+    html += '</div>';
+    html += '<div class="rr-quiz-nav" style="justify-content:flex-end">';
+    html += '<button class="rr-qbtn rr-qbtn-next" onclick="submitForm()">Commencer le diagnostic <i class="fa-solid fa-arrow-right"></i></button>';
+    html += '</div></div>';
+
+  /* ---- QUESTIONS ---- */
+  } else if (qStep < total) {
+    var q = QUIZ_QUESTIONS[qStep];
+    var sel = qAnswers[qStep];
+    var userName = qUserData.prenom ? ', ' + qUserData.prenom : '';
+
+    html += '<div class="rr-quiz-screen active">';
+    html += '<p class="rr-q-num">QUESTION ' + (qStep + 1) + ' / ' + total + '</p>';
+    html += '<p class="rr-q-text">' + q.q + '</p>';
+    html += '<div class="rr-q-opts">';
+    q.opts.forEach(function(opt, i) {
+      var sc = (sel === i) ? ' sel' : '';
+      html += '<div class="rr-q-opt' + sc + '" onclick="selectAns(' + i + ')">';
+      html += '<span class="rr-q-letter">' + letters[i] + '</span>';
+      html += '<span class="rr-q-opttext">' + opt + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    // Seulement bouton Précédent (+ retour au formulaire si Q1)
+    html += '<div class="rr-quiz-nav">';
+    html += '<button class="rr-qbtn rr-qbtn-prev" onclick="qGo(-1)"><i class="fa-solid fa-chevron-left"></i> Précédent</button>';
+    html += '<span class="rr-quiz-hint">Clique sur une réponse pour continuer</span>';
+    html += '</div></div>';
+
+  /* ---- RÉSULTAT ---- */
+  } else {
+    var scores = {A:0, B:0, C:0};
+    for (var qi = 0; qi < total; qi++) {
+      var ans = qAnswers[qi];
+      if (ans === 0) scores.A += QUIZ_W[qi][0];
+      else if (ans === 1) scores.B += QUIZ_W[qi][1];
+      else if (ans === 2) scores.C += QUIZ_W[qi][2];
+    }
+    var dom = 'A';
+    if (scores.B > scores[dom]) dom = 'B';
+    if (scores.C > scores[dom]) dom = 'C';
+    var keys = Object.keys(scores).sort(function(a,b){ return scores[b]-scores[a]; });
+    var hybrid = (scores[keys[0]] - scores[keys[1]]) <= 2;
+    var r = QUIZ_RES[dom];
+    var greeting = qUserData.prenom ? qUserData.prenom + ', voici ' : 'Voici ';
+
+    html += '<div class="rr-quiz-result active">';
+    html += '<p class="rr-res-eye">Profil dominant</p>';
+    html += '<h2 class="rr-res-title">' + r.label + '</h2>';
+    html += '<p class="rr-res-sub">' + r.sub + (hybrid ? ' · Profil hybride' : '') + '</p>';
+    html += '<div class="rr-res-box">';
+    html += '<p class="rr-res-veh">' + r.veh + '</p>';
+    html += '<p class="rr-res-veh-txt">' + r.vehtxt + '</p>';
+    html += '<ul class="rr-res-buls">';
+    r.bullets.forEach(function(b) { html += '<li>' + b + '</li>'; });
+    html += '</ul>';
+    html += '<p class="rr-res-enjeu">' + r.enjeu + '</p>';
+    html += '<p class="rr-res-challenge">' + r.challenge + '</p>';
+    html += '</div>';
+    html += '<button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ' + r.cta + '</button>';
+    html += '<button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>';
+    html += '</div>';
+  }
+
+  wrap.innerHTML = html;
+  wrap.scrollTop = 0;
+}
+
+function submitForm() {
+  var prenom = (document.getElementById('qPrenom') ? document.getElementById('qPrenom').value.trim() : '');
+  var nom    = (document.getElementById('qNom')    ? document.getElementById('qNom').value.trim()    : '');
+  var tel    = (document.getElementById('qTel')    ? document.getElementById('qTel').value.trim()    : '');
+
+  // Validation minimale
+  if (!prenom || !nom || !tel) {
+    var inputs = document.querySelectorAll('.rr-form-input');
+    inputs.forEach(function(inp) {
+      if (!inp.value.trim()) inp.style.borderColor = '#c0392b';
+    });
+    return;
+  }
+  qUserData = { prenom: prenom, nom: nom, tel: tel };
+  qStep = 0;
+  renderQuiz();
+}
+
+function selectAns(i) {
+  qAnswers[qStep] = i;
+
+  // Highlight visuel bref puis passage automatique
+  renderQuiz(); // affiche la sélection
+  setTimeout(function() {
+    qStep = Math.min(QUIZ_QUESTIONS.length, qStep + 1);
+    renderQuiz();
+    document.getElementById('quizWrap').scrollTop = 0;
+  }, 300); // 300ms de feedback visuel avant d'avancer
+}
+
+function qGo(dir) {
+  // dir === -1 seulement (retour arrière)
+  var newStep = qStep + dir;
+  if (newStep < 0) newStep = -1; // retour au formulaire
+  qStep = newStep;
+  renderQuiz();
+  document.getElementById('quizWrap').scrollTop = 0;
+}
+
+</script>
+</body>
+</html>
