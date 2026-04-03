@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic de Départ — R&R™</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ============================================================
+           VARIABLES & RESET
+           ============================================================ */
+        :root {
+            --gold:       #C9A84C;
+            --gold-dark:  #988038;
+            --black:      #000000;
+            --black-soft: #0D0D0D;
+            --red:        #7B1E1E;
+            --red-hover:  #9B2424;
+            --white:      #FFFFFF;
+            --cream:      #FAF8F5;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--black-soft);
+            color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ============================================================
+           CONTENEUR PRINCIPAL DU QUIZ (LARGEUR OPTIMISÉE)
+           ============================================================ */
+        .quiz-container {
+            width: 100%;
+            max-width: 900px; /* Bonne largeur demandée */
+            background: var(--cream);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rr-quiz-wrap {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex: 1;
+        }
+
+        /* Barre de progression */
+        .rr-quiz-pbar { height: 6px; background: rgba(0,0,0,0.08); flex-shrink: 0; }
+        .rr-quiz-pfill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); transition: width .4s ease; }
+
+        /* Écrans du quiz */
+        .rr-quiz-screen { display: none; flex-direction: column; flex: 1; padding: 40px 60px; }
+        .rr-quiz-screen.active { display: flex; }
+
+        /* Textes */
+        .rr-q-num { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+        .rr-q-text { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1.4; margin-bottom: 30px; }
+
+        /* Options de réponse */
+        .rr-q-opts { display: flex; flex-direction: column; gap: 12px; }
+        .rr-q-opt { 
+            display: flex; align-items: flex-start; gap: 14px; padding: 18px 22px; 
+            border: 1.5px solid rgba(0,0,0,0.1); border-radius: 8px; cursor: pointer; 
+            transition: all .2s; background: white; 
+        }
+        .rr-q-opt:hover { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+        .rr-q-opt.sel { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+        .rr-q-letter { 
+            width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--gold); 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; font-weight: 800; color: var(--gold); flex-shrink: 0; 
+        }
+        .rr-q-opt.sel .rr-q-letter { background: var(--gold); color: white; }
+        .rr-q-opttext { font-size: 17px; font-weight: 500; color: #333; line-height: 1.45; padding-top: 4px; }
+
+        /* Navigation */
+        .rr-quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .rr-qbtn { 
+            padding: 14px 26px; font-size: 14px; font-weight: 700; text-transform: uppercase; 
+            letter-spacing: 1px; border: none; border-radius: 4px; cursor: pointer; 
+            transition: all .2s; display: inline-flex; align-items: center; gap: 8px; 
+        }
+        .rr-qbtn-prev { background: rgba(0,0,0,0.06); color: #666; }
+        .rr-qbtn-next { background: var(--red); color: white; }
+        .rr-qbtn-next:hover { background: var(--red-hover); transform: translateY(-1px); }
+
+        /* Formulaire initial */
+        .rr-form-fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+        .rr-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .rr-form-group { display: flex; flex-direction: column; gap: 6px; }
+        .rr-form-label { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; }
+        .rr-form-input { padding: 14px; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 6px; font-family: inherit; font-size: 16px; }
+        .rr-form-input:focus { border-color: var(--gold); outline: none; }
+
+        /* Résultats */
+        .rr-quiz-result { display: none; flex-direction: column; align-items: center; padding: 50px 60px; text-align: center; }
+        .rr-quiz-result.active { display: flex; }
+        .rr-res-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; margin-bottom: 10px; }
+        .rr-res-box { 
+            background: white; border: 1.5px solid rgba(201,168,76,.3); border-left: 5px solid var(--gold); 
+            border-radius: 8px; padding: 35px; text-align: left; margin: 30px 0; width: 100%; 
+        }
+        .rr-res-veh { font-size: 12px; font-weight: 700; color: var(--red); text-transform: uppercase; margin-bottom: 5px; }
+        .rr-res-buls { list-style: none; margin: 20px 0; }
+        .rr-res-buls li { font-size: 17px; margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .rr-res-buls li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+        
+        .rr-quiz-restart { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; cursor: pointer; margin-top: 20px; border-radius: 4px; font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .rr-quiz-screen, .rr-quiz-result { padding: 30px 20px; }
+            .rr-form-row { grid-template-columns: 1fr; }
+            .rr-q-text { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quizWrap" class="rr-quiz-wrap">
+        </div>
+</div>
+
+<script>
+/* ============================================================
+   LOGIQUE & DONNÉES DU QUIZ
+   ============================================================ */
+
+const QUIZ_QUESTIONS = [
+  { q: "Quelle est ta plus grande frustration actuelle ?", opts: ["Je suis bon, mais je manque de visibilité","Je m'épuise à convaincre les gens un par un","Je gagne de l'argent, mais au prix de ma liberté","Je sais que je vaux plus que ce que je facture","Je ne sais pas par quoi commencer"] },
+  { q: "Comment les gens te perçoivent-ils aujourd'hui ?", opts: ["Comme une option parmi d'autres","Comme un technicien compétent","Comme une référence dans ton domaine","Comme quelqu'un d'utile mais interchangeable","Ils ne savent pas vraiment ce que tu fais"] },
+  { q: "Ta stratégie de contenu actuelle ressemble à :", opts: ["Publier souvent en espérant que ça morde","Chercher à prouver ton expertise par la technique","Tu n'as pas de stratégie claire, tu navigues à vue","Tu es très présent mais tes messages sont flous","Tu ne publies presque rien par peur de déranger"] },
+  { q: "Quand tu parles de tes prix :", opts: ["Tu as peur que ce soit trop cher","Tu justifies chaque centime par le temps passé","Tu annonces ton tarif et tu attends, anxieux","Tu as du mal à ne pas faire de remise","Tu es mal à l'aise quand il s'agit de parler d'argent"] },
+  { q: "Quand tu regardes ton investissement personnel :", opts: ["Tu donnes beaucoup pour peu de reconnaissance","Tu travailles dur pour des résultats incohérents","Tu fournis beaucoup d'efforts émotionnels","Tu avances sans vision globale","Tu ajustes sans cesse ton discours"] },
+  { q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Une solitude décisionnelle","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
+  { q: "La phrase qui te ressemble le plus :", opts: ["Je suis utile, mais invisible.","Je fais bien les choses, mais ce n'est pas reconnu.","Ce n'est pas normal que ce soit aussi compliqué.","Je sais que ça pourrait marcher mieux… mais je ne vois pas comment.","Je suis globalement aligné."] },
+  { q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De te caricaturer pour être compris"] },
+  { q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
+];
+
+// Matrice de pondération pour les résultats A, B et C
+const QUIZ_W = [
+  [3,2,1], [2,2,2], [2,3,2], [1,3,2], [3,1,1], [2,2,3], [1,2,3], [3,2,2], [2,3,2]
+];
+
+const QUIZ_RES = {
+  A: {
+    label: "L'Expert Invisible à Forte Valeur",
+    sub: "Valeur forte, reconnaissance faible",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Travailler plus dur pour prouver que je suis bon.\"",
+    bullets: ["Tu es l'expert qu'on ne voit pas.","Tu as le talent, mais pas l'audience.","Tu es souvent comparé au lieu d'être choisi."],
+    enjeu: "Ton enjeu clé : Passer de l'invisibilité à la Stature.",
+    challenge: "Tu penses que c'est une question de marketing, mais c'est une question de Structure. Ton talent est réel, mais il est mal 'emballé'. Tu n'as pas besoin de plus de compétences techniques, tu as besoin d'une architecture qui rend ta valeur évidente aux yeux du marché.",
+    cta: "Découvrir la méthode R&R™"
+  },
+  B: {
+    label: "Le Prestataire Engagé",
+    sub: "Utilité réelle, revenus plafonnés",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Vendre son temps contre de l'argent.\"",
+    bullets: ["Tu refuses les manipulations.","Tu veux de la cohérence.","Mais tes revenus ne suivent pas ton impact."],
+    enjeu: "Ton enjeu clé : réconcilier utilité et argent.",
+    challenge: "Tu as peur de vendre parce que tu confonds \"vendre\" et \"manipuler\". Aujourd'hui, tu vends ton temps, ce qui te force à négocier des miettes. En structurant ta valeur dans un véhicule qui garantit une transformation, l'argent devient un investissement logique.",
+    cta: "Le Challenge R&R™ est ton prochain pas"
+  },
+  C: {
+    label: "Le Leader Solitaire",
+    sub: "Responsabilité élevée. Structure fragile.",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Porter toute la structure sur ses propres épaules.\"",
+    bullets: ["Tu es bloqué par l'isolement stratégique.","Tu manques d'un miroir stratégique fiable.","Tu es le goulot d'étranglement de ta réussite."],
+    enjeu: "Ton enjeu clé : créer une architecture stratégique autonome.",
+    challenge: "Tu as réussi, mais à quel prix ? Ton ancien véhicule (la force brute) a atteint sa limite. La nouvelle opportunité n'est pas de travailler plus, mais de construire une Architecture qui travaille pour toi. Tu vas passer de l'homme-orchestre au chef d'orchestre.",
+    cta: "Rejoindre l'écosystème R&R™"
+  }
+};
+
+let qAnswers = {};
+let qStep = -1; // -1 = Formulaire initial
+let qUserData = {};
+
+function initQuiz() {
+    qAnswers = {};
+    qStep = -1;
+    renderQuiz();
+}
+
+function renderQuiz() {
+    const wrap = document.getElementById('quizWrap');
+    const total = QUIZ_QUESTIONS.length;
+    const pct = qStep < 0 ? 0 : Math.min(100, (qStep / total) * 100);
+    const letters = ['A','B','C','D','E'];
+    
+    let html = `<div class="rr-quiz-pbar"><div class="rr-quiz-pfill" style="width:${pct}%"></div></div>`;
+
+    // --- ÉTAPE FORMULAIRE ---
+    if (qStep === -1) {
+        html += `
+        <div class="rr-quiz-screen active">
+            <p class="rr-q-num">Diagnostic de départ</p>
+            <p class="rr-q-text">Avant de commencer, faisons connaissance</p>
+            <div class="rr-form-fields">
+                <div class="rr-form-row">
+                    <div class="rr-form-group">
+                        <label class="rr-form-label">Prénom</label>
+                        <input id="qPrenom" type="text" class="rr-form-input" placeholder="Ton prénom">
+                    </div>
+                    <div class="rr-form-group">
+                        <label class="rr-form-label">Nom</label>
+                        <input id="qNom" type="text" class="rr-form-input" placeholder="Ton nom">
+                    </div>
+                </div>
+                <div class="rr-form-group">
+                    <label class="rr-form-label">Téléphone (WhatsApp)</label>
+                    <input id="qTel" type="tel" class="rr-form-input" placeholder="Ex: +229 ...">
+                </div>
+            </div>
+            <div class="rr-quiz-nav">
+                <div></div>
+                <button class="rr-qbtn rr-qbtn-next" onclick="submitForm()">Commencer <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>`;
+    } 
+    // --- ÉTAPE QUESTIONS ---
+    else if (qStep < total) {
+        const qData = QUIZ_QUESTIONS[qStep];
+        html += `
+        <div class="rr-quiz-screen active">
+            <p class="rr-q-num">Question ${qStep + 1} / ${total}</p>
+            <p class="rr-q-text">${qData.q}</p>
+            <div class="rr-q-opts">
+                ${qData.opts.map((opt, i) => {
+                    const sc = qAnswers[qStep] === i ? ' sel' : '';
+                    return `
+                    <div class="rr-q-opt${sc}" onclick="selectAns(${i})">
+                        <span class="rr-q-letter">${letters[i]}</span>
+                        <span class="rr-q-opttext">${opt}</span>
+                    </div>`;
+                }).join('')}
+            </div>
+            <div class="rr-quiz-nav">
+                <button class="rr-qbtn rr-qbtn-prev" onclick="qGo(-1)"><i class="fa-solid fa-chevron-left"></i> Précédent</button>
+            </div>
+        </div>`;
+    } 
+    // --- ÉTAPE RÉSULTATS ---
+    else {
+        const scores = {A:0, B:0, C:0};
+        for (let qi = 0; qi < total; qi++) {
+            const ans = qAnswers[qi];
+            if (ans === 0) scores.A += QUIZ_W[qi][0];
+            else if (ans === 1) scores.B += QUIZ_W[qi][1];
+            else scores.C += QUIZ_W[qi][2];
+        }
+
+        let resKey = 'A';
+        if (scores.B >= scores.A && scores.B >= scores.C) resKey = 'B';
+        else if (scores.C >= scores.A && scores.C >= scores.B) resKey = 'C';
+
+        const r = QUIZ_RES[resKey];
+        html += `
+        <div class="rr-quiz-result active">
+            <p class="rr-res-eye">Ton Diagnostic</p>
+            <h2 class="rr-res-title">${r.label}</h2>
+            <p class="rr-res-sub">${r.sub}</p>
+            
+            <div class="rr-res-box">
+                <p class="rr-res-veh">${r.veh}</p>
+                <p style="font-style:italic; color:#666; margin-bottom:15px;">${r.vehtxt}</p>
+                <ul class="rr-res-buls">
+                    ${r.bullets.map(b => `<li>${b}</li>`).join('')}
+                </ul>
+                <p style="font-weight:700; margin-bottom:10px;">${r.enjeu}</p>
+                <p style="color:#555; line-height:1.6;">${r.challenge}</p>
+            </div>
+            
+            <button class="rr-qbtn rr-qbtn-next">${r.cta} <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>
+        </div>`;
+    }
+
+    wrap.innerHTML = html;
+}
+
+function submitForm() {
+    const p = document.getElementById('qPrenom').value.trim();
+    const n = document.getElementById('qNom').value.trim();
+    const t = document.getElementById('qTel').value.trim();
+    
+    if(!p || !n || !t) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+    }
+    qUserData = { prenom: p, nom: n, tel: t };
+    qStep = 0;
+    renderQuiz();
+}
+
+function selectAns(i) {
+    qAnswers[qStep] = i;
+    renderQuiz();
+    setTimeout(() => {
+        qStep++;
+        renderQuiz();
+    }, 300);
+}
+
+function qGo(dir) {
+    qStep += dir;
+    renderQuiz();
+}
+
+// Lancement initial
+initQuiz();
+
+</script>
+</body>
+</html>
