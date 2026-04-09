@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Challenge R&R™</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ============================================================
+   RESET & VARIABLES GLOBALES
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:       #C9A84C;
+  --gold-dark:  #988038;
+  --red:        #7B1E1E;
+  --red-hover:  #9B2424;
+  --cream:      #F5F0E8;
+  --white:      #FFFFFF;
+  --black-soft: #1a1a1a;
+  --text-muted: #888888;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--cream);
+  color: var(--black-soft);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+/* ============================================================
+   EN-TÊTE DU QUIZ (ACCUEIL)
+   ============================================================ */
+.rr-header {
+  text-align: center;
+  margin-bottom: 40px;
+  max-width: 800px;
+}
+.rr-header-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 600;
+  color: var(--black-soft);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.rr-header-title span {
+  color: var(--gold);
+}
+.rr-header-sub {
+  font-size: 18px;
+  color: #555;
+}
+
+/* ============================================================
+   CONTENEUR PRINCIPAL DU QUIZ
+   ============================================================ */
+.rr-quiz-container {
+  width: 100%;
+  max-width: 800px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+/* BARRE DE PROGRESSION */
+.rr-quiz-pbar {
+  height: 6px;
+  background: rgba(0,0,0,0.05);
+  flex-shrink: 0;
+  width: 100%;
+}
+.rr-quiz-pfill {
+  height: 100%;
+  width: 0%; /* Géré dynamiquement en JS */
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ÉCRAN DE QUESTION */
+.rr-quiz-screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 40px 50px;
+  animation: fadeIn 0.4s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rr-q-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.rr-q-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--black-soft);
+  line-height: 1.4;
+  margin-bottom: 32px;
+}
+
+/* OPTIONS DE RÉPONSE */
+.rr-q-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rr-q-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--white);
+}
+.rr-q-opt:hover {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.04);
+  transform: translateX(4px);
+}
+.rr-q-opt.sel {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+.rr-q-letter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--gold);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.rr-q-opt.sel .rr-q-letter {
+  background: var(--gold);
+  color: var(--white);
+}
+.rr-q-opttext {
+  font-size: 17px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.45;
+  padding-top: 4px;
+}
+
+/* NAVIGATION */
+.rr-quiz-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+.rr-qbtn {
+  padding: 14px 26px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+.rr-qbtn-prev {
+  background: rgba(0,0,0,0.05);
+  color: #666;
+}
+.rr-qbtn-prev:hover {
+  background: rgba(0,0,0,0.1);
+}
+.rr-quiz-hint {
+  font-size: 16px;
+  color: #000;
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* ============================================================
+   RÉSULTAT DU QUIZ
+   ============================================================ */
+.rr-quiz-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 50px;
+  text-align: center;
+  animation: fadeIn 0.6s ease forwards;
+}
+.rr-res-eye {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* AVATAR ARCHÉTYPE */
+.rr-res-avatar-wrap {
+  position: relative;
+  margin-bottom: 24px;
+}
+.rr-res-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 0 6px rgba(201,168,76,0.12), 0 12px 30px rgba(0,0,0,0.15);
+  display: block;
+  margin: 0 auto;
+}
+.rr-res-avatar-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(201,168,76,0.35);
+  animation: spinRing 18s linear infinite;
+  pointer-events: none;
+}
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+.rr-res-archetype {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--gold-dark);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.rr-res-intro {
+  font-size: 16px;
+  color: #555;
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 600px;
+}
+.rr-res-nouvopp {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.rr-res-veh-inline {
+  font-style: italic;
+  font-weight: 400;
+  color: #666;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.rr-res-cta-fire {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--red);
+  margin-bottom: 16px;
+  margin-top: 4px;
+}
+.rr-res-challenge-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black-soft);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.rr-res-sub {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.rr-res-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--black-soft);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.rr-res-box {
+  background: var(--cream);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-left: 4px solid var(--gold);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: left;
+  margin-bottom: 32px;
+  width: 100%;
+}
+.rr-res-veh {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.rr-res-veh-txt {
+  font-size: 16px;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+.rr-res-buls {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.rr-res-buls li {
+  font-size: 17px;
+  color: #333;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.5;
+}
+.rr-res-buls li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 9px;
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.rr-res-enjeu {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--black-soft);
+  margin-bottom: 12px;
+}
+.rr-res-challenge {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.8;
+}
+.rr-res-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--red);
+  color: var(--white);
+  padding: 18px 36px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 8px 25px rgba(123,30,30,0.25);
+  font-family: 'Poppins', sans-serif;
+}
+.rr-res-cta:hover {
+  background: var(--red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(123,30,30,0.35);
+}
+.rr-quiz-restart {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: 'Poppins', sans-serif;
+  transition: color 0.2s;
+}
+.rr-quiz-restart:hover { color: var(--black-soft); }
+
+/* RESPONSIVE */
+@media(max-width:768px) {
+  .rr-quiz-screen, .rr-quiz-result { padding: 30px 20px; }
+  .rr-q-text { font-size: 20px; }
+  .rr-q-opttext { font-size: 15px; }
+  .rr-res-title { font-size: 28px; }
+  .rr-res-box { padding: 24px 20px; }
+  .rr-quiz-nav { flex-direction: column-reverse; gap: 16px; text-align: center; }
+  .rr-qbtn-prev { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+  <header class="rr-header">
+    <h1 class="rr-header-title">Bienvenue sur le quiz du challenge <span>R&R™</span></h1>
+    <p class="rr-header-sub">Effectuez ce diagnostic en toute honnêteté pour connaître votre profil exact et vos prochains leviers d'action.</p>
+  </header>
+
+  <div class="rr-quiz-container" id="quizContainer">
+    </div>
+
+<script>
+/**
+ * ============================================================
+ * DONNÉES DU QUIZ
+ * ============================================================
+ */
+const QUIZ_QUESTIONS = [
+  { q: "Quand tu aides quelqu'un, tu as le sentiment que :", opts: ["On te remercie, mais sans te considérer comme une référence","On te consulte pour \"avoir ton avis\", rarement pour décider","On reconnaît ton expertise, mais pas à sa juste valeur financière","Ton impact est clair, mais mal compris ou mal formulé","Ton travail est respecté et reconnu (rare)"] },
+  { q: "Quelle phrase te ressemble le plus ?", opts: ["Je déteste me mettre en avant.","Je sais vendre… mais pas aux bonnes personnes.","Je veux gagner de l'argent sans mentir sur qui je suis.","Je n'ai pas encore trouvé une structure de vente claire.","Je ne sais pas comment expliquer simplement ma valeur."] },
+  { q: "Aujourd'hui, tes clients/prospects sont surtout :", opts: ["Reconnaissants mais peu engageants","Négociateurs, flous ou ne te correspondent pas","Inconstants : parfois bons, parfois inexistants","Trop variés, sans logique claire","Perdus face à ton message"] },
+  { q: "Tes revenus sont aujourd'hui :", opts: ["Irréguliers et imprévisibles","Acceptables mais instables","Corrects mais épuisants à maintenir","En décalage avec ton impact réel","Sereins et alignés"] },
+  { q: "Si un inconnu te demandait ce que tu fais, tu pourrais :", opts: ["L'expliquer… mais en plusieurs minutes","Donner une réponse qui change selon la personne","Dire ce que tu fais, mais pas vraiment pourquoi c'est important","En parler mais c'est inconfortable quand il s'agit de parler d'argent","Donner une réponse claire, simple et mémorable"] },
+  { q: "Quand tu regardes ton investissement personnel :", opts: ["Tu donnes beaucoup pour peu de reconnaissance","Tu travailles dur pour des résultats incohérents","Tu fournis beaucoup d'efforts émotionnels","Tu avances sans vision globale","Tu ajustes sans cesse ton discours"] },
+  { q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Le poids de décider tout seul","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
+  { q: "La phrase qui te ressemble le plus :", opts: ["Je suis utile, mais invisible.","Je fais bien les choses, mais ce n'est pas reconnu.","Ce n'est pas normal que ce soit aussi compliqué.","Je sais que ça pourrait marcher mieux… mais je ne vois pas comment.","Je suis globalement aligné."] },
+  { q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De devenir un personnage de télé-réalité pour être compris"] },
+  { q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
+];
+
+// Matrice des poids : chaque index correspond à une question. [Poids Profil A, Poids Profil B, Poids Profil C]
+const QUIZ_W = [
+  [3,2,1], [2,2,2], [2,3,2], [1,3,2], [3,1,1], [2,2,3], [1,2,3], [3,2,2], [2,3,2], [3,2,3]
+];
+
+// Profils de résultats
+const QUIZ_RES = {
+  A: {
+    img: "expert.png",
+    archetype: "💎 Le Diamant Brut",
+    label: "L'Expert Invisible à Forte Valeur",
+    sub: "Valeur forte, reconnaissance faible",
+    intro: "Tu as une valeur inestimable, mais tu ressembles à un caillou gris. Sans la \"taille\" (la structure), le marché te confond avec du gravier.",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Travailler plus dur pour être enfin remarqué.\"",
+    nouvOpp: "La Nouvelle Opportunité : Le Design de Stature.",
+    bullets: ["Tu aides réellement.","Ton impact est là.","Mais tu n'es pas identifié comme une référence."],
+    enjeu: "Ton enjeu clé : rendre ta valeur visible sans te renier.",
+    cta_fire: "Le Challenge R&R™ est pertinent pour toi si tu veux enfin être reconnu à ton juste niveau.",
+    challenge: "Tu as passé des années à accumuler de la valeur, mais tu essaies de la vendre dans un marché qui ne voit que des commodités. Ton problème n'est pas ton talent, c'est ton emballage. Tu n'as pas besoin de plus de diplômes, tu as besoin d'une Stature Assumée. Nous n'allons pas \"améliorer\" ton marketing, nous allons changer la catégorie dans laquelle tu joues pour que tu deviennes l'unique option.",
+    cta: "Le Challenge R&R™ est pertinent pour toi"
+  },
+  B: {
+    img: "independant.png",
+    archetype: "⚖️ La Balance d'Or",
+    label: "L'Indépendant Éthique Bloqué Financièrement",
+    sub: "Aligné intérieurement, bloqué extérieurement",
+    intro: "Tu cherches l'équilibre parfait entre ton impact et ton gain. Le problème ? Ta balance penche toujours du côté du sacrifice personnel.",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Vendre son temps en espérant que les gens comprennent la valeur.\"",
+    nouvOpp: "La Nouvelle Opportunité : L'Offre Irrésistible de Résultat.",
+    bullets: ["Tu refuses les manipulations.","Tu veux de la cohérence.","Mais tes revenus ne suivent pas ton impact."],
+    enjeu: "Ton enjeu clé : réconcilier utilité et argent.",
+    cta_fire: "Le Challenge R&R™ est un vrai point de bascule pour toi.",
+    challenge: "Tu as peur de vendre parce que tu confonds \"vendre\" et \"manipuler\". Aujourd'hui, tu vends ton temps, ce qui te force à négocier des miettes. La nouvelle opportunité, c'est de passer d'un vendeur de services à un Libérateur de Résultats. En structurant ta valeur dans un véhicule qui garantit une transformation, l'argent ne devient plus une question de \"prix\", mais un investissement logique. Tu peux rester éthique et devenir riche, car tu ne vends plus ton temps, mais une solution.",
+    cta: "Le Challenge R&R™ est un vrai point de bascule pour toi"
+  },
+  C: {
+    img: "leader.png",
+    archetype: "🦅 L'Aigle Royal",
+    label: "Leader Solitaire",
+    sub: "Responsabilité élevée. Structure insuffisamment stabilisée.",
+    intro: "Tu voles plus haut que tout le monde, ta vision est perçante, mais l'altitude crée un froid mortel. Tu décides seul, tu chasses seul, tu t'épuises seul.",
+    veh: "L'Ancien Véhicule",
+    vehtxt: "\"Porter toute la structure sur ses propres épaules.\"",
+    nouvOpp: "La Nouvelle Opportunité : L'Architecture d'Autorité.",
+    bullets: ["Tu es bloqué par l'isolement stratégique.","Tu manques d'un miroir stratégique fiable.","Tu veux un regard extérieur fiable et exigeant."],
+    enjeu: "Ton enjeu clé : Créer une architecture stratégique et financière qui ne dépend plus uniquement de ta capacité personnelle à tenir la pression.",
+    cta_fire: "Le Challenge R&R™ est fait pour toi.",
+    challenge: "Tu as réussi, mais à quel prix ? Tu es le goulot d'étranglement de ta propre réussite. Ton ancien véhicule (la force brute) a atteint sa limite de vitesse. La nouvelle opportunité n'est pas de travailler plus, mais de construire une Architecture qui travaille pour toi. Tu vas passer de \"l'homme-orchestre\" au \"chef d'orchestre\". On ne va pas optimiser ton agenda, on va bâtir un écosystème où ta stature génère de l'impact sans drainer ton énergie.",
+    cta: "Le Challenge R&R™ est fait pour toi"
+  }
+};
+
+/**
+ * ============================================================
+ * LOGIQUE ET ÉTAT DU QUIZ
+ * ============================================================
+ */
+let qAnswers = {}; // Stocke les réponses (ex: {0: 1, 1: 3...})
+let qStep = 0;     // Index de la question courante. Si = total, on affiche le résultat.
+const totalQuestions = QUIZ_QUESTIONS.length;
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', initQuiz);
+
+function initQuiz() {
+  qAnswers = {};
+  qStep = 0;
+  renderQuiz();
+}
+
+/**
+ * Fonction principale de rendu (Gère l'affichage dynamique)
+ */
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  const pct = Math.min(100, (qStep / totalQuestions) * 100);
+  const letters = ['A','B','C','D','E'];
+
+  // 1. Barre de progression (commune à tous les écrans)
+  let html = `
+    <div class="rr-quiz-pbar">
+      <div class="rr-quiz-pfill" style="width: ${pct}%"></div>
+    </div>
+  `;
+
+  // 2. Affichage des Questions
+  if (qStep < totalQuestions) {
+    const q = QUIZ_QUESTIONS[qStep];
+    const sel = qAnswers[qStep]; // Récupère la réponse si on recule
+
+    html += `
+      <div class="rr-quiz-screen">
+        <p class="rr-q-num">QUESTION ${qStep + 1} / ${totalQuestions}</p>
+        <p class="rr-q-text">${q.q}</p>
+        <div class="rr-q-opts">
+    `;
+
+    // Boucle sur les options de la question
+    q.opts.forEach((opt, i) => {
+      const isSelected = (sel === i) ? ' sel' : '';
+      html += `
+        <div class="rr-q-opt${isSelected}" onclick="selectAns(${i})">
+          <span class="rr-q-letter">${letters[i]}</span>
+          <span class="rr-q-opttext">${opt}</span>
+        </div>
+      `;
+    });
+
+    html += `</div>`; // Fin .rr-q-opts
+
+    // Navigation (Bouton précédent uniquement s'il n'est pas à la Q1)
+    html += `<div class="rr-quiz-nav">`;
+    if (qStep > 0) {
+      html += `
+        <button class="rr-qbtn rr-qbtn-prev" onclick="goPrev()">
+          <i class="fa-solid fa-chevron-left"></i> Précédent
+        </button>
+      `;
+    } else {
+      html += `<div></div>`; // Élément vide pour garder la flexbox justifiée à droite
+    }
+    
+    html += `
+          <span class="rr-quiz-hint">Clique sur une réponse pour continuer</span>
+        </div>
+      </div>
+    `;
+
+  // 3. Affichage du Résultat
+  } else {
+    // Calcul des scores
+    const scores = { A: 0, B: 0, C: 0 };
+    
+    for (let qi = 0; qi < totalQuestions; qi++) {
+      const ans = qAnswers[qi];
+      // Pour chaque réponse, on ajoute les points définis dans la matrice QUIZ_W
+      // Note : La logique d'origine comptabilisait les points peu importe l'index cliqué, 
+      // car la pondération est liée à la *question* et non à la *réponse spécifique*.
+      // (J'ai conservé cette logique exacte tirée de ton fichier).
+      if (ans === 0) scores.A += QUIZ_W[qi][0];
+      else if (ans === 1) scores.B += QUIZ_W[qi][1];
+      else if (ans === 2) scores.C += QUIZ_W[qi][2];
+    }
+
+    // Détermination du profil dominant
+    let dom = 'A';
+    if (scores.B > scores[dom]) dom = 'B';
+    if (scores.C > scores[dom]) dom = 'C';
+    
+    // Vérification d'un profil hybride (écart de score <= 2 entre le 1er et 2ème)
+    const sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+    const hybrid = (scores[sortedKeys[0]] - scores[sortedKeys[1]]) <= 2;
+    
+    const r = QUIZ_RES[dom];
+
+    // Rendu de l'écran de résultat
+    html += `
+      <div class="rr-quiz-result">
+        <p class="rr-res-eye">Profil dominant</p>
+        <div class="rr-res-avatar-wrap">
+          <img class="rr-res-avatar" src="${r.img}" alt="${r.label}" onerror="this.style.display='none'">
+          <div class="rr-res-avatar-ring"></div>
+        </div>
+        <p class="rr-res-archetype">${r.archetype}</p>
+        <h2 class="rr-res-title">${r.label}</h2>
+        <p class="rr-res-sub">${r.sub}${hybrid ? ' · Profil hybride' : ''}</p>
+        <p class="rr-res-intro">${r.intro}</p>
+        
+        <div class="rr-res-box">
+          <p class="rr-res-veh">${r.veh} : <span class="rr-res-veh-inline">${r.vehtxt}</span></p>
+          <p class="rr-res-nouvopp">${r.nouvOpp}</p>
+          <ul class="rr-res-buls">
+            ${r.bullets.map(b => `<li>${b}</li>`).join('')}
+          </ul>
+          <p class="rr-res-enjeu">${r.enjeu}</p>
+          <p class="rr-res-cta-fire">🔥 ${r.cta_fire}</p>
+          <p class="rr-res-challenge-label">Ton challenge :</p>
+          <p class="rr-res-challenge">${r.challenge}</p>
+        </div>
+        
+        <button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ${r.cta}</button>
+        <button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>
+      </div>
+    `;
+  }
+
+  // Injection du HTML dans le DOM
+  container.innerHTML = html;
+}
+
+/**
+ * Enregistre la réponse et passe à la question suivante
+ */
+function selectAns(i) {
+  qAnswers[qStep] = i;
+  
+  // Rendu immédiat pour montrer la sélection (la classe .sel s'applique)
+  renderQuiz(); 
+  
+  // Petit délai de 300ms pour l'UX (laisser l'utilisateur voir ce qu'il a cliqué)
+  setTimeout(() => {
+    qStep++;
+    renderQuiz();
+  }, 300);
+}
+
+/**
+ * Retour en arrière
+ */
+function goPrev() {
+  if (qStep > 0) {
+    qStep--;
+    renderQuiz();
+  }
+}
+</script>
+</body>
+</html>

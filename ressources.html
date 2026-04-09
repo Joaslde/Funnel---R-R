@@ -894,6 +894,17 @@ body {
   .rr-res-box{padding:18px 16px}
 }
 
+.rr-res-avatar-wrap{position:relative;margin-bottom:16px}
+.rr-res-avatar{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #C9A84C;box-shadow:0 0 0 6px rgba(201,168,76,0.1),0 10px 28px rgba(0,0,0,0.15);display:block;margin:0 auto}
+.rr-res-avatar-ring{position:absolute;inset:-8px;border-radius:50%;border:1.5px dashed rgba(201,168,76,0.35);animation:spinRing 18s linear infinite;pointer-events:none}
+@keyframes spinRing{to{transform:rotate(360deg)}}
+.rr-res-archetype{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#988038;margin-bottom:6px;letter-spacing:1px}
+.rr-res-intro{font-size:15px;color:#555;font-style:italic;line-height:1.7;margin-bottom:22px;max-width:580px}
+.rr-res-veh-inline{font-style:italic;font-weight:400;color:#666;text-transform:none;letter-spacing:0}
+.rr-res-nouvopp{font-size:13px;font-weight:700;color:#988038;text-transform:uppercase;letter-spacing:1px;margin-bottom:18px}
+.rr-res-cta-fire{font-size:14px;font-weight:700;color:#7B1E1E;margin-bottom:14px;margin-top:4px}
+.rr-res-challenge-label{font-size:12px;font-weight:700;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+
 /* FORMULAIRE QUIZ */
 .rr-quiz-form-screen { gap: 0; }
 .rr-form-fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
@@ -916,7 +927,8 @@ body {
 .rr-form-input:focus { border-color: #C9A84C; }
 .rr-form-input::placeholder { color: #bbb; }
 .rr-quiz-hint {
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 600;
   color: #aaa;
   font-style: italic;
   font-family: 'Poppins', sans-serif;
@@ -1345,14 +1357,14 @@ body {
 <script>
 var QUIZ_QUESTIONS = [
   { q: "Quand tu aides quelqu'un, tu as le sentiment que :", opts: ["On te remercie, mais sans te considérer comme une référence","On te consulte pour \"avoir ton avis\", rarement pour décider","On reconnaît ton expertise, mais pas à sa juste valeur financière","Ton impact est clair, mais mal compris ou mal formulé","Ton travail est respecté et reconnu (rare)"] },
-  { q: "Quelle phrase te ressemble le plus ?", opts: ["Je déteste me mettre en avant.","Je sais vendre… mais pas aux bonnes personnes.","Je veux gagner de l'argent sans me travestir.","Je n'ai pas encore trouvé une structure de vente claire.","Je ne sais pas comment expliquer simplement ma valeur."] },
-  { q: "Aujourd'hui, tes clients/prospects sont surtout :", opts: ["Reconnaissants mais peu engageants","Négociateurs, flous ou mal alignés","Inconstants : parfois bons, parfois inexistants","Trop variés, sans logique claire","Perdus face à ton message"] },
+  { q: "Quelle phrase te ressemble le plus ?", opts: ["Je déteste me mettre en avant.","Je sais vendre… mais pas aux bonnes personnes.","Je veux gagner de l'argent sans mentir sur qui je suis.","Je n'ai pas encore trouvé une structure de vente claire.","Je ne sais pas comment expliquer simplement ma valeur."] },
+  { q: "Aujourd'hui, tes clients/prospects sont surtout :", opts: ["Reconnaissants mais peu engageants","Négociateurs, flous ou ne te correspondent pas","Inconstants : parfois bons, parfois inexistants","Trop variés, sans logique claire","Perdus face à ton message"] },
   { q: "Tes revenus sont aujourd'hui :", opts: ["Irréguliers et imprévisibles","Acceptables mais instables","Corrects mais épuisants à maintenir","En décalage avec ton impact réel","Sereins et alignés"] },
   { q: "Si un inconnu te demandait ce que tu fais, tu pourrais :", opts: ["L'expliquer… mais en plusieurs minutes","Donner une réponse qui change selon la personne","Dire ce que tu fais, mais pas vraiment pourquoi c'est important","En parler mais c'est inconfortable quand il s'agit de parler d'argent","Donner une réponse claire, simple et mémorable"] },
   { q: "Quand tu regardes ton investissement personnel :", opts: ["Tu donnes beaucoup pour peu de reconnaissance","Tu travailles dur pour des résultats incohérents","Tu fournis beaucoup d'efforts émotionnels","Tu avances sans vision globale","Tu ajustes sans cesse ton discours"] },
-  { q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Une solitude décisionnelle","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
+  { q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Le poids de décider tout seul","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
   { q: "La phrase qui te ressemble le plus :", opts: ["Je suis utile, mais invisible.","Je fais bien les choses, mais ce n'est pas reconnu.","Ce n'est pas normal que ce soit aussi compliqué.","Je sais que ça pourrait marcher mieux… mais je ne vois pas comment.","Je suis globalement aligné."] },
-  { q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De te caricaturer pour être compris"] },
+  { q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De devenir un personnage de télé-réalité pour être compris"] },
   { q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
 ];
 
@@ -1362,32 +1374,47 @@ var QUIZ_W = [
 
 var QUIZ_RES = {
   A: {
+    img: "expert.png",
+    archetype: "💎 Le Diamant Brut",
     label: "L'Expert Invisible à Forte Valeur",
     sub: "Valeur forte, reconnaissance faible",
+    intro: "Tu as une valeur inestimable, mais tu ressembles à un caillou gris. Sans la \"taille\" (la structure), le marché te confond avec du gravier.",
     veh: "L'Ancien Véhicule",
     vehtxt: "\"Travailler plus dur pour être enfin remarqué.\"",
+    nouvOpp: "La Nouvelle Opportunité : Le Design de Stature.",
     bullets: ["Tu aides réellement.","Ton impact est là.","Mais tu n'es pas identifié comme une référence."],
     enjeu: "Ton enjeu clé : rendre ta valeur visible sans te renier.",
+    ctaFire: "Le Challenge R&R™ est pertinent pour toi si tu veux enfin être reconnu à ton juste niveau.",
     challenge: "Tu as passé des années à accumuler de la valeur, mais tu essaies de la vendre dans un marché qui ne voit que des commodités. Ton problème n'est pas ton talent, c'est ton emballage. Tu n'as pas besoin de plus de diplômes, tu as besoin d'une Stature Assumée. Nous n'allons pas \"améliorer\" ton marketing, nous allons changer la catégorie dans laquelle tu joues pour que tu deviennes l'unique option.",
     cta: "Le Challenge R&R™ est pertinent pour toi"
   },
   B: {
+    img: "independant.png",
+    archetype: "⚖️ La Balance d'Or",
     label: "L'Indépendant Éthique Bloqué Financièrement",
     sub: "Aligné intérieurement, bloqué extérieurement",
+    intro: "Tu cherches l'équilibre parfait entre ton impact et ton gain. Le problème ? Ta balance penche toujours du côté du sacrifice personnel.",
     veh: "L'Ancien Véhicule",
     vehtxt: "\"Vendre son temps en espérant que les gens comprennent la valeur.\"",
+    nouvOpp: "La Nouvelle Opportunité : L'Offre Irrésistible de Résultat.",
     bullets: ["Tu refuses les manipulations.","Tu veux de la cohérence.","Mais tes revenus ne suivent pas ton impact."],
     enjeu: "Ton enjeu clé : réconcilier utilité et argent.",
-    challenge: "Tu as peur de vendre parce que tu confonds \"vendre\" et \"manipuler\". Aujourd'hui, tu vends ton temps, ce qui te force à négocier des miettes. La nouvelle opportunité, c'est de passer d'un vendeur de services à un Libérateur de Résultats. En structurant ta valeur dans un véhicule qui garantit une transformation, l'argent ne devient plus une question de \"prix\", mais un investissement logique. Tu peux rester éthique et devenir reconnu.",
+    ctaFire: "Le Challenge R&R™ est un vrai point de bascule pour toi.",
+    challenge: "Tu as peur de vendre parce que tu confonds \"vendre\" et \"manipuler\". Aujourd'hui, tu vends ton temps, ce qui te force à négocier des miettes. La nouvelle opportunité, c'est de passer d'un vendeur de services à un Libérateur de Résultats. En structurant ta valeur dans un véhicule qui garantit une transformation, l'argent ne devient plus une question de \"prix\", mais un investissement logique. Tu peux rester éthique et devenir riche, car tu ne vends plus ton temps, mais une solution.",
     cta: "Le Challenge R&R™ est un vrai point de bascule pour toi"
   },
   C: {
-    label: "Le Leader Solitaire",
+    img: "leader.png",
+    archetype: "🦅 L'Aigle Royal",
+    label: "Leader Solitaire",
     sub: "Responsabilité élevée. Structure insuffisamment stabilisée.",
+    intro: "Tu voles plus haut que tout le monde, ta vision est perçante, mais l'altitude crée un froid mortel. Tu décides seul, tu chasses seul, tu t'épuises seul.",
     veh: "L'Ancien Véhicule",
     vehtxt: "\"Porter toute la structure sur ses propres épaules.\"",
+    nouvOpp: "La Nouvelle Opportunité : L'Architecture d'Autorité.",
     bullets: ["Tu es bloqué par l'isolement stratégique.","Tu manques d'un miroir stratégique fiable.","Tu veux un regard extérieur fiable et exigeant."],
-    enjeu: "Ton enjeu clé : créer une architecture stratégique qui ne dépend plus uniquement de ta capacité personnelle à tenir la pression.",
+    enjeu: "Ton enjeu clé : Créer une architecture stratégique et financière qui ne dépend plus uniquement de ta capacité personnelle à tenir la pression.",
+    ctaFire: "Le Challenge R&R™ est fait pour toi.",
     challenge: "Tu as réussi, mais à quel prix ? Tu es le goulot d'étranglement de ta propre réussite. Ton ancien véhicule (la force brute) a atteint sa limite de vitesse. La nouvelle opportunité n'est pas de travailler plus, mais de construire une Architecture qui travaille pour toi. Tu vas passer de \"l'homme-orchestre\" au \"chef d'orchestre\". On ne va pas optimiser ton agenda, on va bâtir un écosystème où ta stature génère de l'impact sans drainer ton énergie.",
     cta: "Le Challenge R&R™ est fait pour toi"
   }
@@ -1519,7 +1546,7 @@ var qUserData = {}; // { nom, prenom, tel }
 
 function initQuiz() {
   qAnswers = {};
-  qStep = -1; // on commence par le formulaire
+  qStep = 0; // démarre directement sur la première question
   renderQuiz();
 }
 
@@ -1595,15 +1622,20 @@ function renderQuiz() {
 
     html += '<div class="rr-quiz-result active">';
     html += '<p class="rr-res-eye">Profil dominant</p>';
+    html += '<div class="rr-res-avatar-wrap"><img class="rr-res-avatar" src="' + r.img + '" alt="' + r.label + '" onerror="this.style.display=\'none\'"><div class="rr-res-avatar-ring"></div></div>';
+    html += '<p class="rr-res-archetype">' + r.archetype + '</p>';
     html += '<h2 class="rr-res-title">' + r.label + '</h2>';
     html += '<p class="rr-res-sub">' + r.sub + (hybrid ? ' · Profil hybride' : '') + '</p>';
+    html += '<p class="rr-res-intro">' + r.intro + '</p>';
     html += '<div class="rr-res-box">';
-    html += '<p class="rr-res-veh">' + r.veh + '</p>';
-    html += '<p class="rr-res-veh-txt">' + r.vehtxt + '</p>';
+    html += '<p class="rr-res-veh">' + r.veh + ' : <span class="rr-res-veh-inline">' + r.vehtxt + '</span></p>';
+    html += '<p class="rr-res-nouvopp">' + r.nouvOpp + '</p>';
     html += '<ul class="rr-res-buls">';
     r.bullets.forEach(function(b) { html += '<li>' + b + '</li>'; });
     html += '</ul>';
     html += '<p class="rr-res-enjeu">' + r.enjeu + '</p>';
+    html += '<p class="rr-res-cta-fire">🔥 ' + r.ctaFire + '</p>';
+    html += '<p class="rr-res-challenge-label">Ton challenge :</p>';
     html += '<p class="rr-res-challenge">' + r.challenge + '</p>';
     html += '</div>';
     html += '<button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ' + r.cta + '</button>';
@@ -1648,7 +1680,7 @@ function selectAns(i) {
 function qGo(dir) {
   // dir === -1 seulement (retour arrière)
   var newStep = qStep + dir;
-  if (newStep < 0) newStep = -1; // retour au formulaire
+  if (newStep < 0) newStep = 0; // on reste sur la Q1
   qStep = newStep;
   renderQuiz();
   document.getElementById('quizWrap').scrollTop = 0;
