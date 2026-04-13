@@ -409,6 +409,69 @@ body {
 }
 .rr-quiz-restart:hover { color: var(--black-soft); }
 
+/* HEADER CACHÉ PENDANT LE QUIZ */
+.rr-header {
+  transition: opacity 0.3s ease, max-height 0.4s ease, margin 0.4s ease;
+  overflow: hidden;
+}
+.rr-header.hidden {
+  opacity: 0;
+  max-height: 0 !important;
+  margin-bottom: 0 !important;
+  pointer-events: none;
+}
+
+/* SECTIONS DU RÉSULTAT */
+.rr-res-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--black-soft);
+  margin-top: 24px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+}
+.rr-res-section-intro {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.rr-res-section-text {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+.rr-res-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--black-soft);
+  border-left: 3px solid var(--gold);
+  padding: 10px 16px;
+  margin: 14px 0;
+  background: rgba(201,168,76,0.05);
+  border-radius: 0 6px 6px 0;
+}
+.rr-res-cta-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--red);
+  margin-top: 28px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.rr-res-hybrid {
+  font-size: 14px;
+  color: var(--gold-dark);
+  font-weight: 400;
+  display: block;
+  margin-top: 4px;
+}
+
 /* RESPONSIVE */
 @media(max-width:768px) {
   .rr-quiz-screen, .rr-quiz-result { padding: 30px 20px; }
@@ -423,7 +486,7 @@ body {
 </head>
 <body>
 
-  <header class="rr-header">
+  <header class="rr-header" id="rrHeader">
     <h1 class="rr-header-title">Bienvenue sur le quiz du challenge <span>R&R™</span></h1>
     <p class="rr-header-sub">Effectuez ce diagnostic en toute honnêteté pour connaître votre profil exact et vos prochains leviers d'action.</p>
   </header>
@@ -438,16 +501,16 @@ body {
  * ============================================================
  */
 const QUIZ_QUESTIONS = [
-  { q: "Quand tu aides quelqu'un, tu as le sentiment que :", opts: ["On te remercie, mais sans te considérer comme une référence","On te consulte pour \"avoir ton avis\", rarement pour décider","On reconnaît ton expertise, mais pas à sa juste valeur financière","Ton impact est clair, mais mal compris ou mal formulé","Ton travail est respecté et reconnu (rare)"] },
-  { q: "Quelle phrase te ressemble le plus ?", opts: ["Je déteste me mettre en avant.","Je sais vendre… mais pas aux bonnes personnes.","Je veux gagner de l'argent sans mentir sur qui je suis.","Je n'ai pas encore trouvé une structure de vente claire.","Je ne sais pas comment expliquer simplement ma valeur."] },
-  { q: "Aujourd'hui, tes clients/prospects sont surtout :", opts: ["Reconnaissants mais peu engageants","Négociateurs, flous ou ne te correspondent pas","Inconstants : parfois bons, parfois inexistants","Trop variés, sans logique claire","Perdus face à ton message"] },
-  { q: "Tes revenus sont aujourd'hui :", opts: ["Irréguliers et imprévisibles","Acceptables mais instables","Corrects mais épuisants à maintenir","En décalage avec ton impact réel","Sereins et alignés"] },
-  { q: "Si un inconnu te demandait ce que tu fais, tu pourrais :", opts: ["L'expliquer… mais en plusieurs minutes","Donner une réponse qui change selon la personne","Dire ce que tu fais, mais pas vraiment pourquoi c'est important","En parler mais c'est inconfortable quand il s'agit de parler d'argent","Donner une réponse claire, simple et mémorable"] },
-  { q: "Quand tu regardes ton investissement personnel :", opts: ["Tu donnes beaucoup pour peu de reconnaissance","Tu travailles dur pour des résultats incohérents","Tu fournis beaucoup d'efforts émotionnels","Tu avances sans vision globale","Tu ajustes sans cesse ton discours"] },
-  { q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Le poids de décider tout seul","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
-  { q: "La phrase qui te ressemble le plus :", opts: ["Je suis utile, mais invisible.","Je fais bien les choses, mais ce n'est pas reconnu.","Ce n'est pas normal que ce soit aussi compliqué.","Je sais que ça pourrait marcher mieux… mais je ne vois pas comment.","Je suis globalement aligné."] },
-  { q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De devenir un personnage de télé-réalité pour être compris"] },
-  { q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
+  { title: "Évalue comment tu es reconnu par tes clients", q: "Quand tu aides quelqu'un, tu as le sentiment que :", opts: ["On te remercie, mais sans te considérer comme une référence","On te consulte pour \"avoir ton avis\", rarement pour décider","On reconnaît ton expertise, mais pas à sa juste valeur financière","Ton impact est clair, mais mal compris ou mal formulé","Ton travail est respecté et reconnu (rare)"] },
+  { title: "Découvre ton rapport à la vente", q: "Quelle phrase te ressemble le plus ?", opts: ["Je déteste me mettre en avant.","Je sais vendre… mais pas aux bonnes personnes.","Je veux gagner de l'argent sans mentir sur qui je suis.","Je n'ai pas encore trouvé une structure de vente claire.","Je ne sais pas comment expliquer simplement ma valeur."] },
+  { title: "La typologie de tes clients actuels", q: "Aujourd'hui, tes clients/prospects sont surtout :", opts: ["Reconnaissants mais peu engageants","Négociateurs, flous ou ne te correspondent pas","Inconstants : parfois bons, parfois inexistants","Trop variés, sans logique claire","Perdus face à ton message"] },
+  { title: "Évalue ta stabilité financière", q: "Tes revenus sont aujourd'hui :", opts: ["Irréguliers et imprévisibles","Acceptables mais instables","Corrects mais épuisants à maintenir","En décalage avec ton impact réel","Sereins et alignés"] },
+  { title: "Évalue la lisibilité de ton rôle", q: "Si un inconnu te demandait ce que tu fais, tu pourrais :", opts: ["L'expliquer… mais en plusieurs minutes","Donner une réponse qui change selon la personne","Dire ce que tu fais, mais pas vraiment pourquoi c'est important","En parler mais c'est inconfortable quand il s'agit de parler d'argent","Donner une réponse claire, simple et mémorable"] },
+  { title: "Découvre ta balance : Effort vs résultats", q: "Quand tu regardes ton investissement personnel :", opts: ["Tu donnes beaucoup pour peu de reconnaissance","Tu travailles dur pour des résultats incohérents","Tu fournis beaucoup d'efforts émotionnels","Tu avances sans vision globale","Tu ajustes sans cesse ton discours"] },
+  { title: "Évalue la charge mentale liée à ton business", q: "Dans ton activité, tu ressens surtout :", opts: ["Une fatigue mentale constante","Beaucoup de doutes stratégiques","Le poids de décider tout seul","L'impression de faire beaucoup sans levier clair","Une clarté globale"] },
+  { title: "Décris ton vrai problème (Utilise ton intuition)", q: "La phrase qui te ressemble le plus :", opts: ["Je suis utile, mais invisible.","Je fais bien les choses, mais ce n'est pas reconnu.","Ce n'est pas normal que ce soit aussi compliqué.","Je sais que ça pourrait marcher mieux… mais je ne vois pas comment.","Je suis globalement aligné."] },
+  { title: "Décris ton \"drapeau rouge\" : Non négociable !", q: "Tu refuses catégoriquement :", opts: ["De devenir bruyant pour exister","D'attirer n'importe quel client","De vendre du vide","De suivre des tactiques sans vision","De devenir un personnage de télé-réalité pour être compris"] },
+  { title: "Décris ton plus grand désir aujourd'hui", q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
 ];
 
 // Matrice des poids : chaque index correspond à une question. [Poids Profil A, Poids Profil B, Poids Profil C]
@@ -460,47 +523,89 @@ const QUIZ_RES = {
   A: {
     img: "expert.jpg",
     archetype: "💎 Le Diamant Brut",
-    label: "L'Expert Invisible à Forte Valeur",
-    sub: "Valeur forte, reconnaissance faible",
-    intro: "Tu as une valeur inestimable, mais tu ressembles à un caillou gris. Sans la \"taille\" (la structure), le marché te confond avec du gravier.",
-    veh: "L'Ancien Véhicule",
-    vehtxt: "\"Travailler plus dur pour être enfin remarqué.\"",
-    nouvOpp: "La Nouvelle Opportunité : Le Design de Stature.",
-    bullets: ["Tu aides réellement.","Ton impact est là.","Mais tu n'es pas identifié comme une référence."],
-    enjeu: "Ton enjeu clé : rendre ta valeur visible sans te renier.",
-    cta_fire: "Le Challenge R&R™ est pertinent pour toi si tu veux enfin être reconnu à ton juste niveau.",
-    challenge: "Tu as passé des années à accumuler de la valeur, mais tu essaies de la vendre dans un marché qui ne voit que des commodités. Ton problème n'est pas ton talent, c'est ton emballage. Tu n'as pas besoin de plus de diplômes, tu as besoin d'une Stature Assumée. Nous n'allons pas \"améliorer\" ton marketing, nous allons changer la catégorie dans laquelle tu joues pour que tu deviennes l'unique option.",
-    cta: "Le Challenge R&R™ est pertinent pour toi"
+    category: "L'Expert Invisible",
+    s1_title: "1. Le Diagnostic de Stature : La Valeur \"Cachée\"",
+    s1_text: "Les résultats de ton quiz sont formels : ta valeur réelle est immense, mais ta valeur perçue est étouffée.",
+    s1_detail: "Aujourd'hui, tu es une bibliothèque de classe mondiale avec une devanture de garage. Tu aides réellement tes clients, ton impact est concret, mais aux yeux du marché, tu ressembles encore à un \"caillou gris\". Parce que ta structure n'est pas taillée, les prospects te confondent avec du gravier (la commodité) et cherchent à négocier ton prix au kilo.",
+    s2_title: "2. L'Ancien Véhicule : L'Accumulation \"Silencieuse\"",
+    s2_intro: "Jusqu'à présent, ton réflexe a été d'ajouter de la matière pour compenser le manque de visibilité.",
+    s2_bullets: [
+      "<strong>Le Mensonge :</strong> Tu penses qu'en obtenant un diplôme de plus, en travaillant \"plus dur\" ou en étant encore plus \"gentil\" avec tes clients, le monde finira par voir l'éclat de ton diamant.",
+      "<strong>Le Coût de l'Inaction :</strong> Tu augmentes ton ratio Effort et Sacrifice sans toucher à la situation désirée par ton client. Plus tu accumules de savoir sans structure, plus tu deviens \"l'expert complexe\" qu'on écoute poliment mais qu'on ne choisit jamais pour réaliser le projet.",
+      "<strong>Ton sacrifice actuel :</strong> Tu paies la \"Taxe d'Invisibilité\". Tu vois des profils moins compétents que toi prendre la place qui te revient, simplement parce que leur emballage est plus lisible."
+    ],
+    s3_title: "3. L'Effet Domino",
+    s3_intro: "Pour briser ton plafond de verre, tu dois accepter cette vérité :",
+    s3_quote: "\"Le marché ne choisit pas le meilleur expert, il choisit l'expert le plus évident.\"",
+    s3_text: "Le problème n'est pas ton talent, c'est ta catégorie. Tant que tu essaies d'améliorer ton marketing, tu ne fais que polir un caillou. Tu ne dois pas \"mieux te vendre\", tu dois changer la structure même de ta présence.",
+    s4_title: "4. La Nouvelle Opportunité : Le Design de Stature™",
+    s4_intro: "Nous allons opérer un changement de véhicule vers la Stature Assumée.",
+    s4_bullets: [
+      "<strong>Ta destination :</strong> Passer du statut de \"Consultable\" (une option parmi d'autres) à celui de Référence Unique (la seule option logique).",
+      "<strong>Ta probabilité de succès :</strong> En taillant ton expertise via une structure chirurgicale, tu rends ton diamant immédiatement identifiable. Le marché cesse de comparer tes tarifs car tu ne joues plus dans la même catégorie que les autres.",
+      "<strong>La Libération (Effort réduit) :</strong> Tu arrêtes de \"pousser\" pour être remarqué. Ta stature attire naturellement les clients qui respectent ta valeur."
+    ],
+    cta_section_title: "🔥 Ton Prochain Cap : Le Challenge R&R™",
+    cta_text: "Le diamant ne brille que lorsqu'il rencontre la lumière sous le bon angle. Le Challenge R&R™ est la séquence d'ateliers de taille dont ton expertise a besoin. Nous allons transformer ton talent brut en une Architecture d'Autorité qui ne demande plus de justifications. Tu vas enfin être reconnu à ton juste niveau, sans jamais avoir à te renier. Es-tu prêt à cesser d'être une option invisible pour devenir une figure inévitable ?",
+    cta: "JE CRISTALLISE MA STATURE"
   },
   B: {
     img: "independant.jpg",
     archetype: "⚖️ La Balance d'Or",
-    label: "L'Indépendant Éthique Bloqué Financièrement",
-    sub: "Aligné intérieurement, bloqué extérieurement",
-    intro: "Tu cherches l'équilibre parfait entre ton impact et ton gain. Le problème ? Ta balance penche toujours du côté du sacrifice personnel.",
-    veh: "L'Ancien Véhicule",
-    vehtxt: "\"Vendre son temps en espérant que les gens comprennent la valeur.\"",
-    nouvOpp: "La Nouvelle Opportunité : L'Offre Irrésistible de Résultat.",
-    bullets: ["Tu refuses les manipulations.","Tu veux de la cohérence.","Mais tes revenus ne suivent pas ton impact."],
-    enjeu: "Ton enjeu clé : réconcilier utilité et argent.",
-    cta_fire: "Le Challenge R&R™ est un vrai point de bascule pour toi.",
-    challenge: "Tu as peur de vendre parce que tu confonds \"vendre\" et \"manipuler\". Aujourd'hui, tu vends ton temps, ce qui te force à négocier des miettes. La nouvelle opportunité, c'est de passer d'un vendeur de services à un Libérateur de Résultats. En structurant ta valeur dans un véhicule qui garantit une transformation, l'argent ne devient plus une question de \"prix\", mais un investissement logique. Tu peux rester éthique et devenir riche, car tu ne vends plus ton temps, mais une solution.",
-    cta: "Le Challenge R&R™ est un vrai point de bascule pour toi"
+    category: "L'Indépendant Éthique",
+    s1_title: "1. Le Diagnostic de Stature : Aligné, mais asphyxié",
+    s1_text: "Les résultats de ton diagnostic montrent un paradoxe noble mais dangereux : ta boussole intérieure est parfaitement calibrée, mais ton moteur financier est en train de caler.",
+    s1_detail: "Aujourd'hui, ta Balance d'Or penche systématiquement du côté du sacrifice. Tu donnes trop, tu adaptes tout, et tu factures \"petit\" pour rester accessible. Résultat ? Tu paies une \"taxe de gentillesse\" sur chaque mission. Tu sers les autres, mais qui sert ta propre structure ?",
+    s2_title: "2. L'Ancien Véhicule : \"La Vente à l'Heure\"",
+    s2_intro: "Jusqu'ici, tu as utilisé un véhicule qui t'oblige à négocier ton existence même.",
+    s2_bullets: [
+      "<strong>Le Mensonge :</strong> Tu penses que vendre ton temps est la seule façon d'être honnête et transparent. Tu espères que si tu es assez dévoué, les gens finiront par comprendre ta valeur et te paieront plus.",
+      "<strong>Le Coût de l'Inaction :</strong> Tu es coincé dans une commodité. En vendant ton temps, tu crées un conflit d'intérêts : plus tu es efficace, moins tu gagnes. C'est mathématiquement épuisant et cela limite l'impact réel que tu pourrais avoir si tu avais les ressources pour passer à l'échelle.",
+      "<strong>Ton sacrifice actuel :</strong> Tu confonds Vendre et Manipuler. Par peur de \"pousser\", tu laisses tes prospects repartir avec leur problème non résolu. Ton éthique devient ton propre plafond de verre."
+    ],
+    s3_title: "3. L'Effet Domino",
+    s3_intro: "Pour réconcilier ton impact et tes revenus, tu dois renverser ce domino :",
+    s3_quote: "\"Vendre n'est pas prendre, c'est guider vers un résultat.\"",
+    s3_text: "Le problème n'est pas ton intégrité, c'est ton offre. Tant que tu vends un \"service\", tu es comparé au prix du marché. Dès que tu vends une Transformation, tu deviens un partenaire indispensable.",
+    s4_title: "4. La Nouvelle Opportunité : L'Offre Irrésistible de Résultat™",
+    s4_intro: "Le Challenge R&R™ ne va pas t'apprendre à devenir un \"vendeur de tapis\". Il va te donner un nouveau véhicule :",
+    s4_bullets: [
+      "<strong>Ta destination :</strong> Devenir un Libérateur de Résultats. Tu ne vends plus des heures, tu vends la fin d'une souffrance ou l'atteinte d'un objectif vital pour ton client.",
+      "<strong>Ta certitude de Réussite :</strong> En structurant ta valeur dans une offre claire, tu augmentes la confiance de ton client. Plus il est confiant, plus il est prêt à investir.",
+      "<strong>Ton alignement Total :</strong> L'argent devient la conséquence logique de ton utilité. Tu deviens riche parce que tu es éthique et que ton système est enfin capable de supporter ton ambition."
+    ],
+    cta_section_title: "🔥 Ton Prochain Cap : Le Challenge R&R™",
+    cta_text: "On ne va pas \"booster\" ton marketing, on va repositionner ta mission. Le Challenge R&R™ est conçu pour les profils comme le tien, qui refusent de tricher mais qui veulent arrêter de survivre. Nous allons construire ensemble une Architecture de Valeur où ton prix ne sera plus une barrière, mais la preuve de ton engagement envers le succès de ton client. Es-tu prêt à arrêter de négocier des miettes pour enfin bâtir ton impact sur des fondations en or ?",
+    cta: "JE RÉCONCILIE IMPACT ET ARGENT"
   },
   C: {
     img: "leader.jpg",
     archetype: "🦅 L'Aigle Royal",
-    label: "Leader Solitaire",
-    sub: "Responsabilité élevée. Structure insuffisamment stabilisée.",
-    intro: "Tu voles plus haut que tout le monde, ta vision est perçante, mais l'altitude crée un froid mortel. Tu décides seul, tu chasses seul, tu t'épuises seul.",
-    veh: "L'Ancien Véhicule",
-    vehtxt: "\"Porter toute la structure sur ses propres épaules.\"",
-    nouvOpp: "La Nouvelle Opportunité : L'Architecture d'Autorité.",
-    bullets: ["Tu es bloqué par l'isolement stratégique.","Tu manques d'un miroir stratégique fiable.","Tu veux un regard extérieur fiable et exigeant."],
-    enjeu: "Ton enjeu clé : Créer une architecture stratégique et financière qui ne dépend plus uniquement de ta capacité personnelle à tenir la pression.",
-    cta_fire: "Le Challenge R&R™ est fait pour toi.",
-    challenge: "Tu as réussi, mais à quel prix ? Tu es le goulot d'étranglement de ta propre réussite. Ton ancien véhicule (la force brute) a atteint sa limite de vitesse. La nouvelle opportunité n'est pas de travailler plus, mais de construire une Architecture qui travaille pour toi. Tu vas passer de \"l'homme-orchestre\" au \"chef d'orchestre\". On ne va pas optimiser ton agenda, on va bâtir un écosystème où ta stature génère de l'impact sans drainer ton énergie.",
-    cta: "Le Challenge R&R™ est fait pour toi"
+    category: "Le Leader Solitaire",
+    s1_title: "1. Le Diagnostic de Stature : La Solitude du sommet",
+    s1_text: "Les résultats de ton diagnostic sont sans appel : tu as atteint les sommets, mais tu es victime de ton propre succès. Ta vision est perçante, mais l'altitude crée une solitude décisionnelle.",
+    s1_detail: "Aujourd'hui, tu es le goulot d'étranglement de ta propre réussite. Ton entreprise ne repose pas sur un système, elle repose sur ton énergie vitale. Si tu arrêtes de battre des ailes pendant 48 heures, tout s'effondre. Tu ne possèdes pas un business, tu possèdes un job de haut vol qui te consomme 100 % de ton espace mental.",
+    s2_title: "2. L'Ancien Véhicule : La Force Brute",
+    s2_intro: "Jusqu'ici, ton moteur a été la Force de Volonté.",
+    s2_bullets: [
+      "<strong>Le Mensonge :</strong> Tu penses que pour passer au niveau supérieur, tu dois voler plus haut, décider plus vite et porter encore plus de responsabilités sur tes épaules.",
+      "<strong>Le Coût de l'Inaction :</strong> Si tu restes dans ce véhicule, le crash est mathématique. Soit tu atteins un plafond de revenus que tu ne peux plus dépasser par manque de temps, soit tu finis en burn-out.",
+      "<strong>Ton sacrifice actuel :</strong> Tu échanges ta liberté contre du contrôle. Tu es seul dans ton cockpit, sans miroir stratégique fiable pour te contredire ou t'élever."
+    ],
+    s3_title: "3. L'Effet Domino",
+    s3_intro: "Pour briser ton plafond de verre, tu dois renverser un seul domino :",
+    s3_quote: "\"Ta stature ne doit plus dépendre de ta sueur, mais de ton Architecture.\"",
+    s3_text: "Le problème n'est pas ton talent, c'est ton infrastructure. Passer de l'homme-orchestre au chef d'orchestre n'est pas une question de \"mieux gérer son temps\", c'est une question de changement de véhicule.",
+    s4_title: "4. La Nouvelle Opportunité : L'Architecture d'Autorité™",
+    s4_intro: "Ce que le Challenge R&R™ t'offre, c'est un nouveau système :",
+    s4_bullets: [
+      "<strong>Ta destination :</strong> Un écosystème où ta présence génère de l'impact et où tes revenus sont décorrélés de ton temps de vol.",
+      "<strong>Ta Probabilité de Succès :</strong> En installant une structure de Stature, tu n'as plus besoin de \"pousser\" pour obtenir des résultats. Le marché vient à toi pour ton jugement, pas pour ton exécution.",
+      "<strong>Effort et Sacrifice Réduits :</strong> On ne va pas optimiser ton agenda (effort inutile), on va bâtir une forteresse stratégique qui te redonne 20h de lucidité par semaine."
+    ],
+    cta_section_title: "🔥 Ton Prochain Cap : Le Challenge R&R™",
+    cta_text: "Le problème n'est pas l'altitude, c'est l'épuisement. L'Aigle ne doit pas apprendre à voler moins haut, il doit apprendre à bâtir le nid qui protège sa lignée et l'empire qui pérennise sa vision. Es-tu prêt à transformer ta solitude au sommet en une Stature d'Empire ? L'enjeu n'est pas de renoncer à ta réussite, mais de changer le moteur qui t'y maintient. Nous allons construire ensemble l'écrin qui permettra à ton génie de dominer sans te drainer. Garde l'altitude. Change simplement l'architecture qui te permet d'y régner.",
+    cta: "JE BÂTIS MON EMPIRE DE STATURE"
   }
 };
 
@@ -511,6 +616,7 @@ const QUIZ_RES = {
  */
 let qAnswers = {}; // Stocke les réponses (ex: {0: 1, 1: 3...})
 let qStep = 0;     // Index de la question courante. Si = total, on affiche le résultat.
+let quizStarted = false; // Masque le header après le 1er clic
 const totalQuestions = QUIZ_QUESTIONS.length;
 
 // Initialisation au chargement
@@ -519,6 +625,8 @@ document.addEventListener('DOMContentLoaded', initQuiz);
 function initQuiz() {
   qAnswers = {};
   qStep = 0;
+  quizStarted = false;
+  document.getElementById('rrHeader').classList.remove('hidden');
   renderQuiz();
 }
 
@@ -544,7 +652,7 @@ function renderQuiz() {
 
     html += `
       <div class="rr-quiz-screen">
-        <p class="rr-q-num">QUESTION ${qStep + 1} / ${totalQuestions}</p>
+        <p class="rr-q-num">QUESTION ${qStep + 1} — ${q.title}</p>
         <p class="rr-q-text">${q.q}</p>
         <div class="rr-q-opts">
     `;
@@ -610,28 +718,39 @@ function renderQuiz() {
     // Rendu de l'écran de résultat
     html += `
       <div class="rr-quiz-result">
-        <p class="rr-res-eye">Profil dominant</p>
+        <p class="rr-res-eye">Ton profil dominant : ${r.archetype}</p>
         <div class="rr-res-avatar-wrap">
-          <img class="rr-res-avatar" src="${r.img}" alt="${r.label}" onerror="this.style.display='none'">
+          <img class="rr-res-avatar" src="${r.img}" alt="${r.category}" onerror="this.style.display='none'">
           <div class="rr-res-avatar-ring"></div>
         </div>
-        <p class="rr-res-archetype">${r.archetype}</p>
-        <h2 class="rr-res-title">${r.label}</h2>
-        <p class="rr-res-sub">${r.sub}${hybrid ? ' · Profil hybride' : ''}</p>
-        <p class="rr-res-intro">${r.intro}</p>
-        
+        <h2 class="rr-res-title">${r.category}${hybrid ? '<span class="rr-res-hybrid">· Profil hybride</span>' : ''}</h2>
+
         <div class="rr-res-box">
-          <p class="rr-res-veh">${r.veh} : <span class="rr-res-veh-inline">${r.vehtxt}</span></p>
-          <p class="rr-res-nouvopp">${r.nouvOpp}</p>
+          <h3 class="rr-res-section-title">${r.s1_title}</h3>
+          <p class="rr-res-section-intro">${r.s1_text}</p>
+          <p class="rr-res-section-text">${r.s1_detail}</p>
+
+          <h3 class="rr-res-section-title">${r.s2_title}</h3>
+          <p class="rr-res-section-intro">${r.s2_intro}</p>
           <ul class="rr-res-buls">
-            ${r.bullets.map(b => `<li>${b}</li>`).join('')}
+            ${r.s2_bullets.map(b => `<li>${b}</li>`).join('')}
           </ul>
-          <p class="rr-res-enjeu">${r.enjeu}</p>
-          <p class="rr-res-cta-fire">🔥 ${r.cta_fire}</p>
-          <p class="rr-res-challenge-label">Ton challenge :</p>
-          <p class="rr-res-challenge">${r.challenge}</p>
+
+          <h3 class="rr-res-section-title">${r.s3_title}</h3>
+          <p class="rr-res-section-intro">${r.s3_intro}</p>
+          <blockquote class="rr-res-quote">${r.s3_quote}</blockquote>
+          <p class="rr-res-section-text">${r.s3_text}</p>
+
+          <h3 class="rr-res-section-title">${r.s4_title}</h3>
+          <p class="rr-res-section-intro">${r.s4_intro}</p>
+          <ul class="rr-res-buls">
+            ${r.s4_bullets.map(b => `<li>${b}</li>`).join('')}
+          </ul>
+
+          <h3 class="rr-res-cta-section-title">${r.cta_section_title}</h3>
+          <p class="rr-res-section-text">${r.cta_text}</p>
         </div>
-        
+
         <button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ${r.cta}</button>
         <button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>
       </div>
@@ -647,6 +766,12 @@ function renderQuiz() {
  */
 function selectAns(i) {
   qAnswers[qStep] = i;
+
+  // Masquer le header dès le premier clic
+  if (!quizStarted) {
+    quizStarted = true;
+    document.getElementById('rrHeader').classList.add('hidden');
+  }
   
   // Rendu immédiat pour montrer la sélection (la classe .sel s'applique)
   renderQuiz(); 
