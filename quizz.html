@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz — Challenge R&R™</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 /* ============================================================
@@ -42,6 +42,14 @@ body {
   text-align: center;
   margin-bottom: 40px;
   max-width: 800px;
+  transition: opacity 0.3s ease, max-height 0.4s ease, margin 0.4s ease;
+  overflow: hidden;
+}
+.rr-header.hidden {
+  opacity: 0;
+  max-height: 0 !important;
+  margin-bottom: 0 !important;
+  pointer-events: none;
 }
 .rr-header-title {
   font-family: 'Cormorant Garamond', serif;
@@ -103,20 +111,34 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.rr-q-num {
-  font-size: 12px;
+/* HIERARCHIE DES TITRES DES QUESTIONS (MODIFIÉE) */
+.rr-q-num-container {
+  margin-bottom: 24px;
+}
+.rr-q-label {
+  font-size: 13px;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--text-muted);
   letter-spacing: 3px;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.rr-q-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px; /* Plus grand que la question elle-même */
+  font-weight: 700;
+  color: var(--gold-dark);
+  line-height: 1.2;
 }
 .rr-q-text {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
   color: var(--black-soft);
   line-height: 1.4;
   margin-bottom: 32px;
+  padding-left: 16px;
+  border-left: 3px solid rgba(201,168,76,0.3);
 }
 
 /* OPTIONS DE RÉPONSE */
@@ -217,17 +239,32 @@ body {
   flex-direction: column;
   align-items: center;
   flex: 1;
-  padding: 50px;
+  padding: 50px 40px;
   text-align: center;
   animation: fadeIn 0.6s ease forwards;
 }
+
+/* PROFIL DOMINANT (MODIFIÉ) */
 .rr-res-eye {
-  font-size: 12px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.rr-res-eye-label {
+  font-size: 16px;
   font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 3px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
   text-transform: uppercase;
-  margin-bottom: 20px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.rr-res-archetype-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px; /* Beaucoup plus gros et visible */
+  font-weight: 700;
+  color: var(--black-soft); /* Changé en noir pour un contraste fort */
+  line-height: 1.1;
+  display: block;
 }
 
 /* AVATAR ARCHÉTYPE */
@@ -236,171 +273,212 @@ body {
   margin-bottom: 24px;
 }
 .rr-res-avatar {
-  width: 110px;
-  height: 110px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--gold);
-  box-shadow: 0 0 0 6px rgba(201,168,76,0.12), 0 12px 30px rgba(0,0,0,0.15);
+  border: 4px solid var(--gold);
+  box-shadow: 0 0 0 8px rgba(201,168,76,0.12), 0 15px 35px rgba(0,0,0,0.15);
   display: block;
   margin: 0 auto;
 }
 .rr-res-avatar-ring {
   position: absolute;
-  inset: -8px;
+  inset: -12px;
   border-radius: 50%;
-  border: 1.5px dashed rgba(201,168,76,0.35);
-  animation: spinRing 18s linear infinite;
+  border: 1.5px dashed rgba(201,168,76,0.4);
+  animation: spinRing 20s linear infinite;
   pointer-events: none;
 }
-@keyframes spinRing {
-  to { transform: rotate(360deg); }
-}
-.rr-res-archetype {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--gold-dark);
-  margin-bottom: 8px;
-  letter-spacing: 1px;
-}
-.rr-res-intro {
-  font-size: 16px;
-  color: #555;
-  font-style: italic;
-  line-height: 1.7;
-  margin-bottom: 28px;
-  max-width: 600px;
-}
-.rr-res-nouvopp {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gold-dark);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-}
-.rr-res-veh-inline {
-  font-style: italic;
-  font-weight: 400;
-  color: #666;
-  text-transform: none;
-  letter-spacing: 0;
-}
-.rr-res-cta-fire {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--red);
-  margin-bottom: 16px;
-  margin-top: 4px;
-}
-.rr-res-challenge-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--black-soft);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-.rr-res-sub {
-  font-size: 16px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
+
+/* TITRE CATÉGORIE (MODIFIÉ) */
 .rr-res-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 600;
-  color: var(--black-soft);
-  margin-bottom: 8px;
+  color: var(--gold-dark);
+  margin-bottom: 40px;
   line-height: 1.2;
 }
-.rr-res-box {
-  background: var(--cream);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-left: 4px solid var(--gold);
+.cat-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   NOUVELLE STRUCTURE DU CONTENU DES RÉSULTATS (DICHOTOMIE)
+   ============================================================ */
+.rr-res-content {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Espace entre les blocs */
+  margin-bottom: 40px;
+}
+
+/* Typographie globale des sections */
+.rr-res-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; /* Plus grand pour respecter la hiérarchie */
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+.rr-res-section-intro {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.rr-res-section-text {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* BLOC 1 : DIAGNOSTIC (Style Sombre et Immersif) */
+.rr-res-card-diag {
+  background: var(--black-soft);
+  color: #ececec;
+  border-radius: 12px;
+  padding: 36px 32px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+.rr-res-card-diag .rr-res-section-title {
+  color: var(--gold);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding-bottom: 12px;
+}
+.rr-res-card-diag .rr-res-section-intro { color: var(--white); }
+
+/* BLOC 2 & 4 : VÉHICULE & OPPORTUNITÉ (Style Clair et Structuré) */
+.rr-res-card-light {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-top: 5px solid var(--text-muted);
+  border-radius: 10px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+}
+.rr-res-card-light.opp { border-top-color: var(--gold); } /* Variante pour l'opportunité */
+.rr-res-card-light .rr-res-section-title { color: var(--black-soft); }
+.rr-res-card-light .rr-res-section-intro { color: #444; }
+.rr-res-card-light .rr-res-section-text { color: #555; }
+
+/* BLOC 3 : EFFET DOMINO (Style Accent avec liseré) */
+.rr-res-card-accent {
+  background: rgba(201,168,76,0.06);
+  border-left: 5px solid var(--gold);
   border-radius: 8px;
   padding: 32px;
-  text-align: left;
-  margin-bottom: 32px;
-  width: 100%;
 }
-.rr-res-veh {
-  font-size: 13px;
-  font-weight: 700;
+.rr-res-card-accent .rr-res-section-title { color: var(--gold-dark); }
+.rr-res-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--black-soft);
+  text-align: center;
+  padding: 24px;
+  margin: 20px 0;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+/* BLOC 5 : CALL TO ACTION (Zone de transition forte) */
+.rr-res-card-cta-zone {
+  background: linear-gradient(145deg, #ffffff 0%, #f9f6f0 100%);
+  border: 2px dashed rgba(201,168,76,0.3);
+  border-radius: 12px;
+  padding: 40px 32px;
+  text-align: center;
+}
+.rr-res-card-cta-zone .rr-res-cta-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
   color: var(--red);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 6px;
+  margin-bottom: 16px;
 }
-.rr-res-veh-txt {
-  font-size: 16px;
-  color: #666;
-  font-style: italic;
-  margin-bottom: 20px;
+.rr-res-card-cta-zone .rr-res-section-text {
+  text-align: center;
+  color: #444;
+  margin-bottom: 30px;
 }
+
+/* Listes dans les cartes claires */
 .rr-res-buls {
   list-style: none;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 14px;
+  margin-top: 16px;
 }
 .rr-res-buls li {
-  font-size: 17px;
-  color: #333;
-  padding-left: 24px;
+  font-size: 15px;
+  color: #444;
+  padding-left: 28px;
   position: relative;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+.rr-res-buls li strong {
+  color: var(--black-soft);
+  font-weight: 700;
 }
 .rr-res-buls li::before {
-  content: '';
+  content: '\f0da'; /* Flèche FontAwesome */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
   position: absolute;
-  left: 0; top: 9px;
-  width: 8px; height: 8px;
-  background: var(--gold);
-  border-radius: 50%;
-}
-.rr-res-enjeu {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--black-soft);
-  margin-bottom: 12px;
-}
-.rr-res-challenge {
+  left: 0;
+  top: 2px;
+  color: var(--gold);
   font-size: 16px;
-  color: #555;
-  line-height: 1.8;
 }
+
+/* BOUTON D'ACTION FINAL */
 .rr-res-cta {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 12px;
   background: var(--red);
   color: var(--white);
-  padding: 18px 36px;
+  padding: 20px 40px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 8px 25px rgba(123,30,30,0.25);
+  box-shadow: 0 10px 30px rgba(123,30,30,0.25);
   font-family: 'Poppins', sans-serif;
+  width: 100%;
+  max-width: 500px;
 }
 .rr-res-cta:hover {
   background: var(--red-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(123,30,30,0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(123,30,30,0.35);
 }
+
+/* BOUTON RECOMMENCER */
 .rr-quiz-restart {
-  margin-top: 20px;
+  margin-top: 24px;
   background: none;
   border: none;
-  color: #aaa;
+  color: #999;
   font-size: 14px;
   cursor: pointer;
   text-decoration: underline;
@@ -409,76 +487,27 @@ body {
 }
 .rr-quiz-restart:hover { color: var(--black-soft); }
 
-/* HEADER CACHÉ PENDANT LE QUIZ */
-.rr-header {
-  transition: opacity 0.3s ease, max-height 0.4s ease, margin 0.4s ease;
-  overflow: hidden;
-}
-.rr-header.hidden {
-  opacity: 0;
-  max-height: 0 !important;
-  margin-bottom: 0 !important;
-  pointer-events: none;
-}
-
-/* SECTIONS DU RÉSULTAT */
-.rr-res-section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--black-soft);
-  margin-top: 24px;
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(201,168,76,0.25);
-}
-.rr-res-section-intro {
-  font-size: 15px;
-  font-weight: 600;
-  color: #444;
-  line-height: 1.7;
-  margin-bottom: 10px;
-}
-.rr-res-section-text {
-  font-size: 15px;
-  color: #555;
-  line-height: 1.8;
-  margin-bottom: 10px;
-}
-.rr-res-quote {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  font-style: italic;
-  color: var(--black-soft);
-  border-left: 3px solid var(--gold);
-  padding: 10px 16px;
-  margin: 14px 0;
-  background: rgba(201,168,76,0.05);
-  border-radius: 0 6px 6px 0;
-}
-.rr-res-cta-section-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--red);
-  margin-top: 28px;
-  margin-bottom: 12px;
-  letter-spacing: 0.5px;
-}
 .rr-res-hybrid {
   font-size: 14px;
-  color: var(--gold-dark);
+  color: var(--text-muted);
   font-weight: 400;
   display: block;
-  margin-top: 4px;
+  margin-top: 8px;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 /* RESPONSIVE */
 @media(max-width:768px) {
   .rr-quiz-screen, .rr-quiz-result { padding: 30px 20px; }
-  .rr-q-text { font-size: 20px; }
+  .rr-q-title { font-size: 24px; }
+  .rr-q-text { font-size: 18px; }
   .rr-q-opttext { font-size: 15px; }
-  .rr-res-title { font-size: 28px; }
-  .rr-res-box { padding: 24px 20px; }
+  .rr-res-archetype-name { font-size: 36px; }
+  .rr-res-title { font-size: 26px; }
+  .rr-res-card-diag, .rr-res-card-light, .rr-res-card-accent, .rr-res-card-cta-zone { padding: 24px 20px; }
+  .rr-res-quote { font-size: 18px; padding: 16px; }
   .rr-quiz-nav { flex-direction: column-reverse; gap: 16px; text-align: center; }
   .rr-qbtn-prev { width: 100%; justify-content: center; }
 }
@@ -492,7 +521,7 @@ body {
   </header>
 
   <div class="rr-quiz-container" id="quizContainer">
-    </div>
+  </div>
 
 <script>
 /**
@@ -513,16 +542,14 @@ const QUIZ_QUESTIONS = [
   { title: "Décris ton plus grand désir aujourd'hui", q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
 ];
 
-// Matrice des poids : chaque index correspond à une question. [Poids Profil A, Poids Profil B, Poids Profil C]
 const QUIZ_W = [
   [3,2,1], [2,2,2], [2,3,2], [1,3,2], [3,1,1], [2,2,3], [1,2,3], [3,2,2], [2,3,2], [3,2,3]
 ];
 
-// Profils de résultats
 const QUIZ_RES = {
   A: {
     img: "expert.jpg",
-    archetype: "💎 Le Diamant Brut",
+    archetype: "Le Diamant Brut",
     category: "L'Expert Invisible",
     s1_title: "1. Le Diagnostic de Stature : La Valeur \"Cachée\"",
     s1_text: "Les résultats de ton quiz sont formels : ta valeur réelle est immense, mais ta valeur perçue est étouffée.",
@@ -537,7 +564,7 @@ const QUIZ_RES = {
     s3_title: "3. L'Effet Domino",
     s3_intro: "Pour briser ton plafond de verre, tu dois accepter cette vérité :",
     s3_quote: "\"Le marché ne choisit pas le meilleur expert, il choisit l'expert le plus évident.\"",
-    s3_text: "Le problème n'est pas ton talent, c'est ta catégorie. Tant que tu essaies d'améliorer ton marketing, tu ne fais que polir un caillou. Tu ne dois pas \"mieux te vendre\", tu dois changer la structure même de ta présence.",
+    s3_text: "Le problème n'est pas ton talent, cest ta catégorie. Tant que tu essaies d'améliorer ton marketing, tu ne fais que polir un caillou. Tu ne dois pas \"mieux te vendre\", tu dois changer la structure même de ta présence.",
     s4_title: "4. La Nouvelle Opportunité : Le Design de Stature™",
     s4_intro: "Nous allons opérer un changement de véhicule vers la Stature Assumée.",
     s4_bullets: [
@@ -551,7 +578,7 @@ const QUIZ_RES = {
   },
   B: {
     img: "independant.jpg",
-    archetype: "⚖️ La Balance d'Or",
+    archetype: "La Balance d'Or",
     category: "L'Indépendant Éthique",
     s1_title: "1. Le Diagnostic de Stature : Aligné, mais asphyxié",
     s1_text: "Les résultats de ton diagnostic montrent un paradoxe noble mais dangereux : ta boussole intérieure est parfaitement calibrée, mais ton moteur financier est en train de caler.",
@@ -580,7 +607,7 @@ const QUIZ_RES = {
   },
   C: {
     img: "leader.jpg",
-    archetype: "🦅 L'Aigle Royal",
+    archetype: "L'Aigle Royal",
     category: "Le Leader Solitaire",
     s1_title: "1. Le Diagnostic de Stature : La Solitude du sommet",
     s1_text: "Les résultats de ton diagnostic sont sans appel : tu as atteint les sommets, mais tu es victime de ton propre succès. Ta vision est perçante, mais l'altitude crée une solitude décisionnelle.",
@@ -614,12 +641,11 @@ const QUIZ_RES = {
  * LOGIQUE ET ÉTAT DU QUIZ
  * ============================================================
  */
-let qAnswers = {}; // Stocke les réponses (ex: {0: 1, 1: 3...})
-let qStep = 0;     // Index de la question courante. Si = total, on affiche le résultat.
-let quizStarted = false; // Masque le header après le 1er clic
+let qAnswers = {}; 
+let qStep = 0;     
+let quizStarted = false; 
 const totalQuestions = QUIZ_QUESTIONS.length;
 
-// Initialisation au chargement
 document.addEventListener('DOMContentLoaded', initQuiz);
 
 function initQuiz() {
@@ -630,15 +656,12 @@ function initQuiz() {
   renderQuiz();
 }
 
-/**
- * Fonction principale de rendu (Gère l'affichage dynamique)
- */
 function renderQuiz() {
   const container = document.getElementById('quizContainer');
   const pct = Math.min(100, (qStep / totalQuestions) * 100);
   const letters = ['A','B','C','D','E'];
 
-  // 1. Barre de progression (commune à tous les écrans)
+  // 1. Barre de progression
   let html = `
     <div class="rr-quiz-pbar">
       <div class="rr-quiz-pfill" style="width: ${pct}%"></div>
@@ -648,16 +671,18 @@ function renderQuiz() {
   // 2. Affichage des Questions
   if (qStep < totalQuestions) {
     const q = QUIZ_QUESTIONS[qStep];
-    const sel = qAnswers[qStep]; // Récupère la réponse si on recule
+    const sel = qAnswers[qStep]; 
 
     html += `
       <div class="rr-quiz-screen">
-        <p class="rr-q-num">QUESTION ${qStep + 1} — ${q.title}</p>
+        <div class="rr-q-num-container">
+          <span class="rr-q-label">QUESTION ${qStep + 1}</span><br/>
+          <span class="rr-q-title">${q.title}</span>
+        </div>
         <p class="rr-q-text">${q.q}</p>
         <div class="rr-q-opts">
     `;
 
-    // Boucle sur les options de la question
     q.opts.forEach((opt, i) => {
       const isSelected = (sel === i) ? ' sel' : '';
       html += `
@@ -668,9 +693,8 @@ function renderQuiz() {
       `;
     });
 
-    html += `</div>`; // Fin .rr-q-opts
+    html += `</div>`; 
 
-    // Navigation (Bouton précédent uniquement s'il n'est pas à la Q1)
     html += `<div class="rr-quiz-nav">`;
     if (qStep > 0) {
       html += `
@@ -679,7 +703,7 @@ function renderQuiz() {
         </button>
       `;
     } else {
-      html += `<div></div>`; // Élément vide pour garder la flexbox justifiée à droite
+      html += `<div></div>`; 
     }
     
     html += `
@@ -688,104 +712,104 @@ function renderQuiz() {
       </div>
     `;
 
-  // 3. Affichage du Résultat
+  // 3. Affichage du Résultat (MODIFIÉ AVEC DICHOTOMIE)
   } else {
-    // Calcul des scores
     const scores = { A: 0, B: 0, C: 0 };
     
     for (let qi = 0; qi < totalQuestions; qi++) {
       const ans = qAnswers[qi];
-      // Pour chaque réponse, on ajoute les points définis dans la matrice QUIZ_W
-      // Note : La logique d'origine comptabilisait les points peu importe l'index cliqué, 
-      // car la pondération est liée à la *question* et non à la *réponse spécifique*.
-      // (J'ai conservé cette logique exacte tirée de ton fichier).
       if (ans === 0) scores.A += QUIZ_W[qi][0];
       else if (ans === 1) scores.B += QUIZ_W[qi][1];
       else if (ans === 2) scores.C += QUIZ_W[qi][2];
     }
 
-    // Détermination du profil dominant
     let dom = 'A';
     if (scores.B > scores[dom]) dom = 'B';
     if (scores.C > scores[dom]) dom = 'C';
     
-    // Vérification d'un profil hybride (écart de score <= 2 entre le 1er et 2ème)
     const sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
     const hybrid = (scores[sortedKeys[0]] - scores[sortedKeys[1]]) <= 2;
-    
     const r = QUIZ_RES[dom];
 
-    // Rendu de l'écran de résultat
+    // Note l'intégration de "Catégorie : " et la séparation en blocs (cards)
     html += `
       <div class="rr-quiz-result">
-        <p class="rr-res-eye">Ton profil dominant : ${r.archetype}</p>
+        <p class="rr-res-eye">
+          <span class="rr-res-eye-label">Ton profil dominant :</span>
+          <span class="rr-res-archetype-name">${r.archetype}</span>
+        </p>
+
         <div class="rr-res-avatar-wrap">
           <img class="rr-res-avatar" src="${r.img}" alt="${r.category}" onerror="this.style.display='none'">
           <div class="rr-res-avatar-ring"></div>
         </div>
-        <h2 class="rr-res-title">${r.category}${hybrid ? '<span class="rr-res-hybrid">· Profil hybride</span>' : ''}</h2>
 
-        <div class="rr-res-box">
-          <h3 class="rr-res-section-title">${r.s1_title}</h3>
-          <p class="rr-res-section-intro">${r.s1_text}</p>
-          <p class="rr-res-section-text">${r.s1_detail}</p>
+        <h2 class="rr-res-title">
+          <span class="cat-label">Catégorie : </span>${r.category}
+          ${hybrid ? '<span class="rr-res-hybrid">· Profil hybride</span>' : ''}
+        </h2>
 
-          <h3 class="rr-res-section-title">${r.s2_title}</h3>
-          <p class="rr-res-section-intro">${r.s2_intro}</p>
-          <ul class="rr-res-buls">
-            ${r.s2_bullets.map(b => `<li>${b}</li>`).join('')}
-          </ul>
+        <div class="rr-res-content">
+          <div class="rr-res-card-diag">
+            <h3 class="rr-res-section-title">${r.s1_title}</h3>
+            <p class="rr-res-section-intro">${r.s1_text}</p>
+            <p class="rr-res-section-text">${r.s1_detail}</p>
+          </div>
 
-          <h3 class="rr-res-section-title">${r.s3_title}</h3>
-          <p class="rr-res-section-intro">${r.s3_intro}</p>
-          <blockquote class="rr-res-quote">${r.s3_quote}</blockquote>
-          <p class="rr-res-section-text">${r.s3_text}</p>
+          <div class="rr-res-card-light">
+            <h3 class="rr-res-section-title">${r.s2_title}</h3>
+            <p class="rr-res-section-intro">${r.s2_intro}</p>
+            <ul class="rr-res-buls">
+              ${r.s2_bullets.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+          </div>
 
-          <h3 class="rr-res-section-title">${r.s4_title}</h3>
-          <p class="rr-res-section-intro">${r.s4_intro}</p>
-          <ul class="rr-res-buls">
-            ${r.s4_bullets.map(b => `<li>${b}</li>`).join('')}
-          </ul>
+          <div class="rr-res-card-accent">
+            <h3 class="rr-res-section-title">${r.s3_title}</h3>
+            <p class="rr-res-section-intro">${r.s3_intro}</p>
+            <blockquote class="rr-res-quote">${r.s3_quote}</blockquote>
+            <p class="rr-res-section-text">${r.s3_text}</p>
+          </div>
 
-          <h3 class="rr-res-cta-section-title">${r.cta_section_title}</h3>
-          <p class="rr-res-section-text">${r.cta_text}</p>
+          <div class="rr-res-card-light opp">
+            <h3 class="rr-res-section-title">${r.s4_title}</h3>
+            <p class="rr-res-section-intro">${r.s4_intro}</p>
+            <ul class="rr-res-buls">
+              ${r.s4_bullets.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="rr-res-card-cta-zone">
+            <h3 class="rr-res-cta-section-title">${r.cta_section_title}</h3>
+            <p class="rr-res-section-text">${r.cta_text}</p>
+            <button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ${r.cta}</button>
+          </div>
         </div>
 
-        <button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ${r.cta}</button>
         <button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>
       </div>
     `;
   }
 
-  // Injection du HTML dans le DOM
   container.innerHTML = html;
 }
 
-/**
- * Enregistre la réponse et passe à la question suivante
- */
 function selectAns(i) {
   qAnswers[qStep] = i;
 
-  // Masquer le header dès le premier clic
   if (!quizStarted) {
     quizStarted = true;
     document.getElementById('rrHeader').classList.add('hidden');
   }
   
-  // Rendu immédiat pour montrer la sélection (la classe .sel s'applique)
   renderQuiz(); 
   
-  // Petit délai de 300ms pour l'UX (laisser l'utilisateur voir ce qu'il a cliqué)
   setTimeout(() => {
     qStep++;
     renderQuiz();
   }, 300);
 }
 
-/**
- * Retour en arrière
- */
 function goPrev() {
   if (qStep > 0) {
     qStep--;
