@@ -542,8 +542,29 @@ const QUIZ_QUESTIONS = [
   { title: "Décris ton plus grand désir aujourd'hui", q: "Ce que tu veux profondément maintenant :", opts: ["Être reconnu pour ta vraie valeur","Attirer naturellement les bons clients sans te travestir","Gagner de l'argent en restant aligné","Avoir une trajectoire claire","Exister de manière lisible et forte"] }
 ];
 
+// Matrice 3D : QUIZ_W[question][réponse] = [pts Avatar1, pts Avatar2, pts Avatar3]
+// A=index0, B=index1, C=index2, D=index3, E=index4
 const QUIZ_W = [
-  [3,2,1], [2,2,2], [2,3,2], [1,3,2], [3,1,1], [2,2,3], [1,2,3], [3,2,2], [2,3,2], [3,2,3]
+  // Q1 — Évalue comment tu es reconnu
+  [[2,0,0],[3,0,0],[0,3,0],[1,0,2],[0,0,0]],
+  // Q2 — Rapport à la vente
+  [[3,0,0],[0,1,2],[0,3,0],[0,0,3],[3,0,0]],
+  // Q3 — Typologie des clients
+  [[2,1,0],[1,2,0],[0,3,0],[0,0,3],[3,0,0]],
+  // Q4 — Stabilité financière
+  [[0,3,0],[1,2,0],[0,0,3],[3,0,0],[0,0,0]],
+  // Q5 — Lisibilité du rôle
+  [[3,0,0],[0,2,1],[2,0,0],[0,3,0],[0,0,0]],
+  // Q6 — Effort vs résultats
+  [[3,0,0],[0,2,1],[0,3,0],[0,0,3],[2,0,0]],
+  // Q7 — Charge mentale
+  [[0,1,2],[0,0,3],[0,0,3],[2,2,0],[0,0,0]],
+  // Q8 — Vrai problème
+  [[3,0,0],[2,1,0],[0,2,1],[0,0,3],[0,0,0]],
+  // Q9 — Drapeau rouge
+  [[3,0,0],[0,2,0],[1,3,0],[0,0,3],[2,0,0]],
+  // Q10 — Plus grand désir
+  [[3,0,0],[0,3,0],[0,3,0],[0,0,3],[2,0,1]]
 ];
 
 const QUIZ_RES = {
@@ -714,21 +735,46 @@ function renderQuiz() {
 
   // 3. Affichage du Résultat (MODIFIÉ AVEC DICHOTOMIE)
   } else {
+    // 1. Initialisation des 3 jauges
     const scores = { A: 0, B: 0, C: 0 };
-    
+    let totalPoints = 0;
+
+    // 2. Calcul : chaque réponse (A-E) distribue ses points aux 3 avatars simultanément
     for (let qi = 0; qi < totalQuestions; qi++) {
       const ans = qAnswers[qi];
-      if (ans === 0) scores.A += QUIZ_W[qi][0];
-      else if (ans === 1) scores.B += QUIZ_W[qi][1];
-      else if (ans === 2) scores.C += QUIZ_W[qi][2];
+      if (ans !== undefined && ans >= 0 && ans <= 4) {
+        const pts = QUIZ_W[qi][ans]; // [pts_A, pts_B, pts_C]
+        scores.A += pts[0];
+        scores.B += pts[1];
+        scores.C += pts[2];
+        totalPoints += pts[0] + pts[1] + pts[2];
+      }
     }
 
-    let dom = 'A';
-    if (scores.B > scores[dom]) dom = 'B';
-    if (scores.C > scores[dom]) dom = 'C';
-    
-    const sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
-    const hybrid = (scores[sortedKeys[0]] - scores[sortedKeys[1]]) <= 2;
+    // 3. Tri décroissant des scores
+    const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+    // 4. Profil dominant avec tie-breaking selon PDF :
+    //    A = B → A gagne | A ou B = C → C gagne
+    let dom;
+    if (totalPoints === 0) {
+      dom = 'A'; // fallback si tout D/E
+    } else {
+      const first = sortedScores[0];
+      const second = sortedScores[1];
+      if (first[1] > second[1]) {
+        dom = first[0]; // vainqueur clair
+      } else {
+        // Égalité stricte
+        const tied = [first[0], second[0]];
+        dom = tied.includes('C') ? 'C' : 'A'; // C prime sur A/B ; A prime sur B
+      }
+    }
+
+    // 5. Profil hybride : écart ≤ 2 et au moins 1 point (anti-faux positif D/E)
+    const scoreDiff = sortedScores[0][1] - sortedScores[1][1];
+    const hybrid = scoreDiff <= 2 && totalPoints > 0;
+
     const r = QUIZ_RES[dom];
 
     // Note l'intégration de "Catégorie : " et la séparation en blocs (cards)
