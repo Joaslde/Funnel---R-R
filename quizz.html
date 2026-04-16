@@ -775,6 +775,7 @@ function renderQuiz() {
     // 5. Profil hybride : écart ≤ 2 et au moins 1 point (anti-faux positif D/E)
     const scoreDiff = sortedScores[0][1] - sortedScores[1][1];
     const hybrid = scoreDiff <= 2 && totalPoints > 0;
+    const secondaryCategory = hybrid ? QUIZ_RES[sortedScores[1][0]].category : '';
 
     const r = QUIZ_RES[dom];
 
@@ -793,7 +794,7 @@ function renderQuiz() {
 
         <h2 class="rr-res-title">
           <span class="cat-label">Catégorie : </span>${r.category}
-          ${hybrid ? '<span class="rr-res-hybrid">· Profil hybride</span>' : ''}
+          ${hybrid ? `<span class="rr-res-hybrid">Hybride : Profil secondaire — "${secondaryCategory}"</span>` : ''}
         </h2>
 
         <div class="rr-res-content">
