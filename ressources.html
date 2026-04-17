@@ -957,9 +957,100 @@ body {
   .rr-res-card-diag,.rr-res-card-light,.rr-res-card-accent,.rr-res-card-cta-zone{padding:20px 16px}
   .rr-res-quote{font-size:16px;padding:14px}
 }
+/* ============================================================
+   MODAL LEAD — z-index > modale principale (9999)
+   ============================================================ */
+.rr-lead-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,10,0.88);
+  backdrop-filter: blur(5px);
+  z-index: 19999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.rr-lead-overlay.open { opacity: 1; visibility: visible; }
+.rr-lead-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  position: relative;
+  overflow: hidden;
+}
+.rr-lead-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #988038, #C9A84C);
+}
+.rr-lead-overlay.open .rr-lead-modal { transform: translateY(0) scale(1); }
+.rr-lead-eyebrow {
+  font-size: 11px; font-weight: 700; color: #988038;
+  letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.rr-lead-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 700; color: #1a1a1a;
+  line-height: 1.25; margin-bottom: 8px;
+}
+.rr-lead-sub { font-size: 13px; color: #777; margin-bottom: 24px; line-height: 1.6; }
+.rr-lead-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.rr-lead-label { font-size: 11px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 1px; }
+.rr-lead-input {
+  padding: 13px 15px; font-size: 14px;
+  font-family: 'Poppins', sans-serif; font-weight: 500;
+  color: #1a1a1a; background: #F5F0E8;
+  border: 1.5px solid transparent; border-radius: 8px;
+  outline: none; transition: border-color .2s, background .2s; width: 100%;
+}
+.rr-lead-input:focus { border-color: #C9A84C; background: #fff; }
+.rr-lead-input.error { border-color: #c0392b; background: #fff5f5; }
+.rr-lead-error-msg { font-size: 11px; color: #c0392b; display: none; margin-top: 1px; }
+.rr-lead-error-msg.show { display: block; }
+.rr-lead-btn {
+  width: 100%; margin-top: 6px; padding: 16px 20px;
+  background: #7B1E1E; color: #fff; border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  cursor: pointer; transition: all .3s; font-family: 'Poppins', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 8px 22px rgba(123,30,30,0.28);
+}
+.rr-lead-btn:hover:not(:disabled) { background: #9B2424; transform: translateY(-2px); }
+.rr-lead-btn:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+.rr-lead-spinner {
+  width: 17px; height: 17px;
+  border: 2.5px solid rgba(255,255,255,0.35); border-top-color: #fff;
+  border-radius: 50%; animation: rrSpin .7s linear infinite; display: none;
+}
+.rr-lead-btn.loading .rr-lead-spinner { display: block; }
+.rr-lead-btn.loading .rr-lead-btn-text { display: none; }
+@keyframes rrSpin { to { transform: rotate(360deg); } }
+.rr-lead-privacy { font-size: 11px; color: #aaa; text-align: center; margin-top: 12px; line-height: 1.5; }
+
+/* Écran de transition dans quizWrap */
+.rr-quiz-transition {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; flex: 1; padding: 50px 30px; text-align: center; gap: 18px;
+}
+.rr-quiz-transition-icon {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(201,168,76,0.12);
+  display: flex; align-items: center; justify-content: center;
+}
+@media(max-width:520px) { .rr-lead-modal { padding: 28px 18px; } .rr-lead-title { font-size: 21px; } }
 </style>
-</head>
-<body>
 
 <!-- ============================================================
      STICKY HEADER
@@ -1634,14 +1725,22 @@ document.getElementById('modalIframe').style.transition = 'opacity 0.2s ease';
 updateProgress();
 
 /* ============================================================
+   CONFIGURATION — GOOGLE APPS SCRIPT
+   Remplace l'URL par celle de ton Web App après déploiement
+   ============================================================ */
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxudz7L-TBgIO01ic7EpK0vUVcRdKppRrVisZ_YyZaohPbnn4pdkrHdYYWqjAQa3Pz10g/exec';
+
+/* ============================================================
    QUIZ ENGINE
    ============================================================ */
 var qAnswers = {};
 var qStep = 0;
+var pendingResult = null; // Stocke le résultat calculé en attente du formulaire
 
 function initQuiz() {
   qAnswers = {};
   qStep = 0;
+  pendingResult = null;
   renderQuiz();
 }
 
@@ -1682,13 +1781,12 @@ function renderQuiz() {
     html += '<span class="rr-quiz-hint">Clique sur une réponse pour continuer</span>';
     html += '</div></div>';
 
-  /* ---- RÉSULTAT ---- */
+  /* ---- FIN DU QUIZ — calcul + stockage + ouverture modal lead ---- */
   } else {
-    // 1. Initialisation des 3 jauges
+    // 1. Jauges
     var scores = {A:0, B:0, C:0};
     var totalPoints = 0;
 
-    // 2. Calcul : chaque réponse distribue ses points aux 3 avatars simultanément
     for (var qi = 0; qi < total; qi++) {
       var ans = qAnswers[qi];
       if (ans !== undefined && ans >= 0 && ans <= 4) {
@@ -1700,10 +1798,10 @@ function renderQuiz() {
       }
     }
 
-    // 3. Tri décroissant
+    // 2. Tri décroissant
     var sortedScores = Object.entries(scores).sort(function(a, b){ return b[1] - a[1]; });
 
-    // 4. Profil dominant avec tie-breaking : A=B → A gagne ; avec C → C gagne
+    // 3. Profil dominant avec tie-breaking
     var dom;
     if (totalPoints === 0) {
       dom = 'A';
@@ -1718,68 +1816,182 @@ function renderQuiz() {
       }
     }
 
-    // 5. Hybride : écart ≤ 2 et au moins 1 point
+    // 4. Hybride
     var scoreDiff = sortedScores[0][1] - sortedScores[1][1];
     var hybrid = scoreDiff <= 2 && totalPoints > 0;
-    var secondaryCategory = hybrid ? QUIZ_RES[sortedScores[1][0]].category : '';
+    var secondaryKey = hybrid ? sortedScores[1][0] : null;
 
-    var r = QUIZ_RES[dom];
-    var hybridHtml = hybrid ? '<span class="rr-res-hybrid"> <strong> Hybride </strong> : Catégorie secondaire — "' + secondaryCategory + '"</span>' : '';
+    // 5. Stocker le résultat en attente
+    pendingResult = { dom: dom, hybrid: hybrid, secondaryKey: secondaryKey };
 
-    html += '<div class="rr-quiz-result active">';
-    html += '<p class="rr-res-eye"><span class="rr-res-eye-label">Ton profil dominant :</span><span class="rr-res-archetype-name">' + r.archetype + '</span></p>';
-    html += '<div class="rr-res-avatar-wrap"><img class="rr-res-avatar" src="' + r.img + '" alt="' + r.category + '" onerror="this.style.display=\'none\'"><div class="rr-res-avatar-ring"></div></div>';
-    html += '<h2 class="rr-res-title"><span class="cat-label">Catégorie : </span>' + r.category + hybridHtml + '</h2>';
-
-    html += '<div class="rr-res-content">';
-
-    // Section 1 — Diagnostic
-    html += '<div class="rr-res-card-diag">';
-    html += '<h3 class="rr-res-section-title">' + r.s1_title + '</h3>';
-    html += '<p class="rr-res-section-intro">' + r.s1_text + '</p>';
-    html += '<p class="rr-res-section-text">' + r.s1_detail + '</p>';
+    // 6. Afficher un écran de transition dans quizWrap
+    html += '<div class="rr-quiz-transition">';
+    html += '<div class="rr-quiz-transition-icon"><i class="fa-solid fa-check" style="font-size:26px;color:#C9A84C;"></i></div>';
+    html += '<h2 style="font-family:\'Cormorant Garamond\',serif;font-size:26px;font-weight:700;color:#1a1a1a;line-height:1.3;">Ton diagnostic est prêt !</h2>';
+    html += '<p style="font-size:14px;color:#666;max-width:360px;line-height:1.7;">Une dernière étape pour révéler ton profil.</p>';
     html += '</div>';
 
-    // Section 2 — Ancien véhicule
-    html += '<div class="rr-res-card-light">';
-    html += '<h3 class="rr-res-section-title">' + r.s2_title + '</h3>';
-    html += '<p class="rr-res-section-intro">' + r.s2_intro + '</p>';
-    html += '<ul class="rr-res-buls">';
-    r.s2_bullets.forEach(function(b){ html += '<li>' + b + '</li>'; });
-    html += '</ul></div>';
-
-    // Section 3 — Effet Domino
-    html += '<div class="rr-res-card-accent">';
-    html += '<h3 class="rr-res-section-title">' + r.s3_title + '</h3>';
-    html += '<p class="rr-res-section-intro" style="color:#000;">' + r.s3_intro + '</p>';
-    html += '<blockquote class="rr-res-quote">' + r.s3_quote + '</blockquote>';
-    html += '<p class="rr-res-section-text" style="color:#000;">' + r.s3_text + '</p>';
-    html += '</div>';
-
-    // Section 4 — Nouvelle Opportunité
-    html += '<div class="rr-res-card-light opp">';
-    html += '<h3 class="rr-res-section-title">' + r.s4_title + '</h3>';
-    html += '<p class="rr-res-section-intro">' + r.s4_intro + '</p>';
-    html += '<ul class="rr-res-buls">';
-    r.s4_bullets.forEach(function(b){ html += '<li>' + b + '</li>'; });
-    html += '</ul></div>';
-
-    // Section CTA
-    html += '<div class="rr-res-card-cta-zone">';
-    html += '<h3 class="rr-res-cta-section-title">' + r.cta_section_title + '</h3>';
-    html += '<p class="rr-res-section-text">' + r.cta_text + '</p>';
-    html += '<a href="https://tally.so/r/lbLqD5"><button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ' + r.cta + '</button></a>';
-    html += '</div>';
-
-    html += '</div>'; // rr-res-content
-    html += '<button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>';
-    html += '</div>';
+    // 7. Ouvrir le modal lead après un court délai
+    setTimeout(function() { openLeadModal(); }, 400);
   }
 
   wrap.innerHTML = html;
   wrap.scrollTop = 0;
 }
 
+/* ============================================================
+   MODAL LEAD — OUVERTURE
+   ============================================================ */
+function openLeadModal() {
+  document.getElementById('rrLeadOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() {
+    var f = document.getElementById('leadPrenom');
+    if (f) f.focus();
+  }, 120);
+}
+
+function closeLeadModal() {
+  document.getElementById('rrLeadOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ============================================================
+   SOUMISSION DU FORMULAIRE LEAD
+   ============================================================ */
+function submitLeadForm() {
+  var userPrenom = document.getElementById('leadPrenom').value.trim();
+  var userEmail  = document.getElementById('leadEmail').value.trim();
+  var userTel    = document.getElementById('leadTel').value.trim();
+
+  // Validation
+  var isValid = true;
+  function setError(inputId, errId, show) {
+    document.getElementById(inputId).classList.toggle('error', show);
+    document.getElementById(errId).classList.toggle('show', show);
+  }
+
+  if (!userPrenom) { setError('leadPrenom','errPrenom',true); isValid = false; }
+  else             { setError('leadPrenom','errPrenom',false); }
+
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail);
+  if (!emailOk) { setError('leadEmail','errEmail',true); isValid = false; }
+  else          { setError('leadEmail','errEmail',false); }
+
+  if (!userTel || userTel.length < 6) { setError('leadTel','errTel',true); isValid = false; }
+  else                                 { setError('leadTel','errTel',false); }
+
+  if (!isValid) return;
+
+  // Anti double envoi
+  var btn = document.getElementById('leadSubmitBtn');
+  if (btn.dataset.sent === 'true') { closeLeadModal(); revealResult(); return; }
+
+  // Chargement
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  // Données
+  var quizCategory1  = QUIZ_RES[pendingResult.dom].category;
+  var quizCategory2  = pendingResult.hybrid ? QUIZ_RES[pendingResult.secondaryKey].category : '';
+  var submissionDate = new Date().toLocaleString('fr-FR');
+
+  var payload = JSON.stringify({
+    userPrenom    : userPrenom,
+    userEmail     : userEmail,
+    userTel       : userTel,
+    quizCategory1 : quizCategory1,
+    quizCategory2 : quizCategory2,
+    submissionDate: submissionDate
+  });
+
+  // Envoi fetch
+  fetch(APPS_SCRIPT_URL, {
+    method : 'POST',
+    mode   : 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body   : payload
+  })
+  .catch(function(err) {
+    console.warn('Envoi sheet non bloquant :', err);
+  })
+  .finally(function() {
+    btn.dataset.sent = 'true';
+    btn.classList.remove('loading');
+    closeLeadModal();
+    revealResult();
+  });
+}
+
+/* ============================================================
+   AFFICHAGE DU RÉSULTAT APRÈS SOUMISSION
+   ============================================================ */
+function revealResult() {
+  if (!pendingResult) return;
+
+  var dom          = pendingResult.dom;
+  var hybrid       = pendingResult.hybrid;
+  var secondaryKey = pendingResult.secondaryKey;
+  var r            = QUIZ_RES[dom];
+  var secCat       = hybrid ? QUIZ_RES[secondaryKey].category : '';
+  var hybridHtml   = hybrid
+    ? '<span class="rr-res-hybrid"> <strong> Hybride </strong>: Catégorie secondaire — "' + secCat + '"</span>'
+    : '';
+
+  var wrap = document.getElementById('quizWrap');
+  var html = '<div class="rr-quiz-pbar"><div class="rr-quiz-pfill" style="width:100%"></div></div>';
+
+  html += '<div class="rr-quiz-result active">';
+  html += '<p class="rr-res-eye"><span class="rr-res-eye-label">Ton profil dominant :</span><span class="rr-res-archetype-name">' + r.archetype + '</span></p>';
+  html += '<div class="rr-res-avatar-wrap"><img class="rr-res-avatar" src="' + r.img + '" alt="' + r.category + '" onerror="this.style.display=\'none\'"><div class="rr-res-avatar-ring"></div></div>';
+  html += '<h2 class="rr-res-title"><span class="cat-label">Catégorie : </span>' + r.category + hybridHtml + '</h2>';
+
+  html += '<div class="rr-res-content">';
+
+  html += '<div class="rr-res-card-diag">';
+  html += '<h3 class="rr-res-section-title">' + r.s1_title + '</h3>';
+  html += '<p class="rr-res-section-intro">' + r.s1_text + '</p>';
+  html += '<p class="rr-res-section-text">' + r.s1_detail + '</p>';
+  html += '</div>';
+
+  html += '<div class="rr-res-card-light">';
+  html += '<h3 class="rr-res-section-title">' + r.s2_title + '</h3>';
+  html += '<p class="rr-res-section-intro">' + r.s2_intro + '</p>';
+  html += '<ul class="rr-res-buls">';
+  r.s2_bullets.forEach(function(b){ html += '<li>' + b + '</li>'; });
+  html += '</ul></div>';
+
+  html += '<div class="rr-res-card-accent">';
+  html += '<h3 class="rr-res-section-title">' + r.s3_title + '</h3>';
+  html += '<p class="rr-res-section-intro" style="color:#000;">' + r.s3_intro + '</p>';
+  html += '<blockquote class="rr-res-quote">' + r.s3_quote + '</blockquote>';
+  html += '<p class="rr-res-section-text" style="color:#000;">' + r.s3_text + '</p>';
+  html += '</div>';
+
+  html += '<div class="rr-res-card-light opp">';
+  html += '<h3 class="rr-res-section-title">' + r.s4_title + '</h3>';
+  html += '<p class="rr-res-section-intro">' + r.s4_intro + '</p>';
+  html += '<ul class="rr-res-buls">';
+  r.s4_bullets.forEach(function(b){ html += '<li>' + b + '</li>'; });
+  html += '</ul></div>';
+
+  html += '<div class="rr-res-card-cta-zone">';
+  html += '<h3 class="rr-res-cta-section-title">' + r.cta_section_title + '</h3>';
+  html += '<p class="rr-res-section-text">' + r.cta_text + '</p>';
+  html += '<a href="https://tally.so/r/lbLqD5"><button class="rr-res-cta"><i class="fa-solid fa-fire"></i> ' + r.cta + '</button></a>';
+  html += '</div>';
+
+  html += '</div>'; // rr-res-content
+  html += '<button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>';
+  html += '</div>';
+
+  wrap.innerHTML = html;
+  wrap.scrollTop = 0;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
 function selectAns(i) {
   qAnswers[qStep] = i;
   renderQuiz();
@@ -1799,5 +2011,38 @@ function qGo(dir) {
 }
 
 </script>
+<!-- ============================================================
+     MODAL LEAD — COLLECTE DONNÉES AVANT RÉSULTAT
+     ============================================================ -->
+<div class="rr-lead-overlay" id="rrLeadOverlay">
+  <div class="rr-lead-modal">
+    <p class="rr-lead-eyebrow"><i class="fa-solid fa-lock"></i> Résultat sécurisé</p>
+    <h2 class="rr-lead-title">Entre tes informations pour accéder au résultat du Quiz</h2>
+    <p class="rr-lead-sub">Ton diagnostic personnalisé est prêt. Une dernière étape pour y accéder.</p>
+
+    <div class="rr-lead-field">
+      <label class="rr-lead-label" for="leadPrenom">Ton Prénom</label>
+      <input class="rr-lead-input" id="leadPrenom" type="text" placeholder="Ex : Marie" autocomplete="given-name">
+      <span class="rr-lead-error-msg" id="errPrenom">Merci d'entrer ton prénom.</span>
+    </div>
+    <div class="rr-lead-field">
+      <label class="rr-lead-label" for="leadEmail">Ton Adresse email</label>
+      <input class="rr-lead-input" id="leadEmail" type="email" placeholder="Ex : marie@gmail.com" autocomplete="email">
+      <span class="rr-lead-error-msg" id="errEmail">Merci d'entrer une adresse email valide.</span>
+    </div>
+    <div class="rr-lead-field">
+      <label class="rr-lead-label" for="leadTel">Ton numéro de Téléphone</label>
+      <input class="rr-lead-input" id="leadTel" type="tel" placeholder="Ex : +33 6 12 34 56 78" autocomplete="tel">
+      <span class="rr-lead-error-msg" id="errTel">Merci d'entrer un numéro de téléphone.</span>
+    </div>
+
+    <button class="rr-lead-btn" id="leadSubmitBtn" onclick="submitLeadForm()">
+      <span class="rr-lead-btn-text"><i class="fa-solid fa-fire"></i> Accéder au résultat maintenant</span>
+      <span class="rr-lead-spinner"></span>
+    </button>
+    <p class="rr-lead-privacy">🔒 Tes données sont confidentielles et ne seront jamais partagées.</p>
+  </div>
+</div>
+
 </body>
 </html>
