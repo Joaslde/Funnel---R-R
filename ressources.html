@@ -1724,7 +1724,7 @@ function renderQuiz() {
     var secondaryCategory = hybrid ? QUIZ_RES[sortedScores[1][0]].category : '';
 
     var r = QUIZ_RES[dom];
-    var hybridHtml = hybrid ? '<span class="rr-res-hybrid">Hybride : Profil secondaire — "' + secondaryCategory + '"</span>' : '';
+    var hybridHtml = hybrid ? '<span class="rr-res-hybrid"> <strong> Hybride </strong> : Catégorie secondaire — "' + secondaryCategory + '"</span>' : '';
 
     html += '<div class="rr-quiz-result active">';
     html += '<p class="rr-res-eye"><span class="rr-res-eye-label">Ton profil dominant :</span><span class="rr-res-archetype-name">' + r.archetype + '</span></p>';
