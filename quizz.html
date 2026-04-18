@@ -1135,10 +1135,11 @@ function revealResult() {
         </div>
       </div>
 
-      <button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>
+       
+      <a href="quizz.html"><button class="rr-quiz-restart">Recommencer le diagnostic</button></a>
     </div>
   `;
-
+  // <button class="rr-quiz-restart" onclick="initQuiz()">Recommencer le diagnostic</button>
   container.innerHTML = html;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
